@@ -1,10 +1,15 @@
+import Navbar from "@/components/Navbar";
 import React from "react";
+import AdminBody from "./AdminBody";
+import Demo from "./Demo";
 
 function AdminHome() {
   return (
-    <div>
-      <h1 className="text-3xl text-center">This is Admin Home...</h1>
-    </div>
+    <>
+      <Navbar />
+      <AdminBody />
+      {/* <Demo /> */}
+    </>
   );
 }
 
