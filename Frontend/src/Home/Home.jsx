@@ -12,6 +12,12 @@ import Navbar from "../components/Navbar";
 // import Login from "../components/Login";
 // import AdminLogin from "../components/AdminLogin";
 import { useAuth } from "../context/AuthProvider";
+import { Services } from "@/components/Services";
+import { HeroPage } from "@/components/HeroPage";
+import HorizontalScrollCarousel from "@/components/HorizontalScrollCarousel ";
+import ReadMore from "@/components/ReadMore";
+import Footer from "@/components/Footer";
+
 
 function Home() {
   const { section } = useParams();
@@ -45,6 +51,14 @@ function Home() {
   return (
     <div className="w-full overflow-x-hidden  ">
       <Navbar />
+      <HeroPage />
+      <br></br>
+      <Services />
+      <HorizontalScrollCarousel />
+      <ReadMore />
+      <Footer />
+      
+      
     </div>
   );
 }

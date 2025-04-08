@@ -10,7 +10,7 @@ createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <AuthProvider1>
       <AuthProvider>
-        <div className="dark:bg-[#222] dark:text-white">
+        <div className="">
           <App />
         </div>
       </AuthProvider>
