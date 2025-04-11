@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider";
-// import Logout from "./Logout";
+import Logout from "./Logout";
 // import Login from "./Login";
 // import AdminLogin from "./AdminLogin";
 import { useAuth1 } from "../context/AuthProvider1";
@@ -135,31 +135,16 @@ const Navbar = () => {
 
           <div className="navbar-end space-x-3">
 
-            
-            
+          {authUser || authAdmin ? (
+  <Logout /> // Show Logout for both user or admin
+) : (
+  <div className="flex items-center justify-center space-x-2">
+    <Button onClick={() => navigate("/UserLogin")}>User Login</Button>
+    <Button onClick={() => navigate("/AdminLogin")}>Admin Login</Button>
+  </div>
+)}
 
-              <div className="flex items-center justify-center space-x-2">
-                {/* <a
-                  className="border border-white text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2 rounded-md hover:bg-black duration-300 cursor-pointer"
-                  onClick={() => {
-                    document.getElementById("Login1").showModal();
-                  }}
-                >
-                  User Login
-                </a> */}
-                <Button className="" onClick={handleClick}>User Login</Button>
-                {/* <a
-                  className="bg-red-500 border border-red-500 text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2 rounded-md hover:bg-red-600 duration-300 cursor-pointer"
-                  onClick={() => {
-                    document.getElementById("Login2").showModal();
-                  }}
-                >
-                  Admin Login
-                </a> */}
 
-                <Button className="">Admin Login</Button>
-              </div>
-           
           </div>
         </div>
         

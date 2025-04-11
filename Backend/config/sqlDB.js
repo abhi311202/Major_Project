@@ -19,7 +19,7 @@ client
   .connect()
   .then(() => console.log("Connected to PostgreSQL"))
   .catch((err) => {
-    console.error("Can't connect to PostgreSQL");
+    console.error(`Can't connect to PostgreSQL: ${err}`);
   });
 
 export default client;

@@ -75,7 +75,7 @@ const CenterImage = () => {
         backgroundSize,
         opacity,
         backgroundImage:
-          "url(https://www.shutterstock.com/shutterstock/photos/2515014231/display_1500/stock-photo--d-illustration-artificial-intelligence-ai-concept-2515014231.jpg)",
+          "url(https://res.cloudinary.com/dqsd7cbfg/image/upload/v1744127673/Newspaper_LegalAI_yewt7q.jpg)",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
@@ -94,7 +94,7 @@ const ParallaxImages = () => {
         className="w-1/3"
       />
       <ParallaxImg
-        src="https://images.unsplash.com/photo-1446776709462-d6b525c57bd3?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        src="https://img.freepik.com/premium-photo/digital-technology-background_1109459-3383.jpg?w=826"
         alt="An example of a space launch"
         start={200}
         end={-250}
@@ -108,7 +108,7 @@ const ParallaxImages = () => {
         className="ml-auto w-1/3"
       />
       <ParallaxImg
-        src="https://images.unsplash.com/photo-1494022299300-899b96e49893?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        src="https://img.freepik.com/free-vector/background-realistic-abstract-technology-particle_23-2148431735.jpg?t=st=1744126330~exp=1744129930~hmac=d531f254d7629165cec5504c4d7cc5e5c64d210714379088d6cfc4cd12b963f3&w=1380"
         alt="Orbiting satellite"
         start={0}
         end={-500}
