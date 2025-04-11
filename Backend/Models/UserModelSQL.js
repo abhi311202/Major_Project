@@ -101,6 +101,7 @@ export const getuserbyusername = async (username) => {
 };
 
 export const loginUser = async (username, password) => {
+  // console.log(password);
   const query = `SELECT * FROM "user"
     WHERE username = $1 AND is_delete = false
     LIMIT 1;`;
@@ -113,7 +114,8 @@ export const loginUser = async (username, password) => {
   }
 
   const user = result.rows[0];
-
+  // console.log(result);
+  // console.log(user);
   const isMatch = await bcryptjs.compare(password, user.password_hash);
   if (!isMatch) {
     throw new Error("Invalid password");
