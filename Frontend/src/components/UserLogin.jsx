@@ -3,8 +3,11 @@ import styled from 'styled-components';
 import Navbar from '../components/Navbar';
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { useAuth } from "../context/AuthProvider"
 
 const UserLogin = () => {
+    const [authUser, setAuthUser] = useAuth();
   const navigate = useNavigate();
   const handleClick = () => {
     navigate("/UserSignUp"); // opens the new page
@@ -16,36 +19,33 @@ const UserLogin = () => {
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    const userInfo = {
-      email: data.email,
-      password: data.password,
-    };
-    console.log(userInfo);
-    await axios
-      .post("http://localhost:4001/user/login", userInfo)
-      .then((res) => {
-        console.log(res.data);
-        if (res.data) {
-          localStorage.setItem("Users", JSON.stringify(res.data.user));
-          toast.success("Logged in successfully");
-
-          document.getElementById("Login1").close();
-          setTimeout(() => {
-            window.location.reload();
-          }, 3000);
-          window.history.replaceState(null, "", "/Home");
-          navigate("/Home", { replace: true });
-          // navigate("/UserHome");
-        }
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.message);
-          toast.error("Error: " + err.response.data.message);
-          setTimeout(() => {}, 2000);
-        }
+    try {
+      const response = await axios.post('http://localhost:4001/User/login', {
+        username: data.username,
+        password_hash: data.password_hash,
       });
+  
+      // If login is successful, you get a token and user info in response.data
+      if (response.status === 200) {
+        // toast.success('Login successful!');
+        alert("Login sucessful")
+        setAuthUser(response.data.user);
+        navigate('/'); // ✅ Redirect to home/dashboard
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+  
+      if (error.response && error.response.status === 401) {
+        // toast.error('Invalid credentials!');
+        alert('Invalid username or password.');
+      } else {
+        // toast.error('Something went wrong during login');
+        alert('Something went wrong. Please try again later.');
+      }
+    }
   };
+  
+
   return (
     <Wrapper>
       <Navbar />
@@ -53,16 +53,16 @@ const UserLogin = () => {
         <h2 className="title">User Login</h2>
 
         <div className="form-group">
-          <label>Email</label>
+          <label>User Name</label>
           <div className="input-wrapper">
             <svg height={20} width={20} viewBox="0 0 32 32" fill="currentColor">
               <path d="..."/>
             </svg>
-            <input type="email" placeholder="Enter your Email"
-            {...register("email", { required: true })} />
+            <input type="text" placeholder="Enter your Email"
+            {...register("username", { required: true })} />
           </div>
         </div>
-        {errors.email && (
+        {errors.username && (
               <span className="p-2 text-sm text-red-500">
                 This field is required
               </span>
@@ -75,21 +75,21 @@ const UserLogin = () => {
               <path d="..."/>
             </svg>
             <input type="password" placeholder="Enter your Password"
-            {...register("password", { required: true })} />
+            {...register("password_hash", { required: true })} />
           </div>
         </div>
-        {errors.password && (
+        {errors.password_hash && (
               <span className="p-2 text-sm text-red-500">
                 This field is required
               </span>
         )}
 
-        <div className="form-extra">
+        {/* <div className="form-extra">
           <label>
             <input type="checkbox" /> Remember me
           </label>
           <span className="link">Forgot password?</span>
-        </div>
+        </div> */}
 
         <button type="submit" className="submit-btn">Log In</button>
 
