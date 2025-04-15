@@ -130,7 +130,7 @@ export const loginUser = async (username, password) => {
       // role: user.role || "user", // if role exists
     },
     process.env.JWT_USER_PASSWORD,
-    { expiresIn: "1m" }
+    { expiresIn: "2h" }
   );
 
   const { password_hash, ...userWithoutPassword } = user;

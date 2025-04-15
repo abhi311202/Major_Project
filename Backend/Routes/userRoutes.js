@@ -13,6 +13,6 @@ import {
 router.post("/register", registerUser);
 router.post("/login", userLogin);
 router.post("/logout", logout);
-router.post("/verify", userMiddleware, demo);
+// router.post("/verify", userMiddleware, demo);
 
 export default router;

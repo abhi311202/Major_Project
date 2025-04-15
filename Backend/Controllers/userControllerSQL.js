@@ -18,20 +18,20 @@ export const registerUser = async (req, res) => {
     console.log(user_exists);
 
     if (user_exist_username) {
-      res
+      return res
         .status(409)
         .json({ error: "User with this Username is already Registered!" });
     } else if (user_exists) {
-      res
+      return res
         .status(409)
         .json({ error: "User with this Email is already Registered!" });
     } else if (user_exist_aadhar) {
-      res
+      return res
         .status(409)
         .json({ error: "User with this Aadhar Number is already Registered!" });
     }
     const user = await createUser(req.body);
-    res.status(201).json(user);
+    return res.status(201).json(user);
   } catch (err) {
     // console.error(err);
     console.log(`Error in Controller: ${err}`);

@@ -81,9 +81,8 @@ export const getPendingReqByID = async (Pending_Request_id) => {
 
 export const Approve_Pending_Req = async (SuperAdmin_id, pendingReq) => {
   const { id, ...pendingReqWithoutId } = pendingReq;
-  console.log(pendingReqWithoutId.name);
 
-  query = `INSERT INTO admin (
+  const query = `INSERT INTO admin (
     name,
     username,
     password_hash,
@@ -119,7 +118,7 @@ export const Approve_Pending_Req = async (SuperAdmin_id, pendingReq) => {
     CURRENT_TIMESTAMP,
     '3000-12-31 00:00:00',
     $12 
-);`;
+) RETURNING id;`;
 
   const result = await client.query(query, [
     pendingReqWithoutId.name,
@@ -136,6 +135,34 @@ export const Approve_Pending_Req = async (SuperAdmin_id, pendingReq) => {
     SuperAdmin_id,
   ]);
 
-  
+  return result.rowCount > 0 ? result.rows[0].id : false;
+  //   console.log(result.rows[0].id);
+};
 
+export const Delete_Pending_Req_By_ID = async (Pending_Request_id) => {
+  //   const query = `SELECT * FROM pending_admin_req WHERE id = $1;`;
+  const query = `UPDATE pending_admin_req SET approved = true WHERE id = $1;`;
+
+  const result = await client.query(query, [Pending_Request_id]);
+
+  console.log(result);
+  return result.rowCount > 0 ? true : false;
+};
+
+export const Delete_From_Admin_Table_By_ID = async (id) => {
+  const query = `delete from admin where id=$1;`;
+
+  const result = await client.query(query, [id]);
+
+  return result.rowCount > 0 ? true : false;
+};
+
+export const Delete_Pending_Req_By_ID1 = async (Pending_Request_id) => {
+  //   const query = `SELECT * FROM pending_admin_req WHERE id = $1;`;
+  const query = `UPDATE pending_admin_req SET is_delete = true WHERE id = $1;`;
+
+  const result = await client.query(query, [Pending_Request_id]);
+
+  console.log(result);
+  return result.rowCount > 0 ? true : false;
 };
