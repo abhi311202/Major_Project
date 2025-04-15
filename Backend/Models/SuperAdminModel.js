@@ -29,7 +29,7 @@ export const loginAdmin = async (username, password) => {
       userId: super_admin.id,
       username: super_admin.username,
       email: super_admin.email,
-      // role: user.role || "user", // if role exists
+      //   role: user.role || "user", // if role exists
     },
     process.env.JWT_USER_PASSWORD,
     { expiresIn: "1m" }
@@ -39,7 +39,7 @@ export const loginAdmin = async (username, password) => {
 
   return {
     message: "Login Successful!!",
-    user: userWithoutPassword,
+    SuperAdmin: userWithoutPassword,
     token,
   };
 };
@@ -54,4 +54,115 @@ export const getAdminRequests = async () => {
   } else {
     return result.rows;
   }
+};
+
+export const getPendingReqByID = async (Pending_Request_id) => {
+  //   const query = `SELECT * FROM pending_admin_req WHERE id = $1;`;
+  const query = `SELECT
+      id,
+      name,
+      username,
+      password_hash,
+      email,
+      phone,
+      dob,
+      gender,
+      aadhar,
+      profession,
+      organization,
+      profile_picture_url
+  FROM pending_admin_req
+  WHERE id = $1;`;
+
+  const result = await client.query(query, [Pending_Request_id]);
+
+  return result.rows.length > 0 ? result.rows[0] : false;
+};
+
+export const Approve_Pending_Req = async (SuperAdmin_id, pendingReq) => {
+  const { id, ...pendingReqWithoutId } = pendingReq;
+
+  const query = `INSERT INTO admin (
+    name,
+    username,
+    password_hash,
+    email,
+    phone,
+    dob,
+    gender,
+    aadhar,
+    profession,
+    organization,
+    profile_picture_url,
+    is_active,
+    is_delete,
+    created_at,
+    updated_at,
+    deleted_at,
+    approver_id
+) VALUES (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6,
+    $7,
+    $8,
+    $9,
+    $10,
+    $11,
+    TRUE,
+    FALSE,
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP,
+    '3000-12-31 00:00:00',
+    $12 
+) RETURNING id;`;
+
+  const result = await client.query(query, [
+    pendingReqWithoutId.name,
+    pendingReqWithoutId.username,
+    pendingReqWithoutId.password_hash,
+    pendingReqWithoutId.email,
+    pendingReqWithoutId.phone,
+    pendingReqWithoutId.dob,
+    pendingReqWithoutId.gender,
+    pendingReqWithoutId.aadhar,
+    pendingReqWithoutId.profession,
+    pendingReqWithoutId.organization,
+    pendingReqWithoutId.profile_picture_url,
+    SuperAdmin_id,
+  ]);
+
+  return result.rowCount > 0 ? result.rows[0].id : false;
+  //   console.log(result.rows[0].id);
+};
+
+export const Delete_Pending_Req_By_ID = async (Pending_Request_id) => {
+  //   const query = `SELECT * FROM pending_admin_req WHERE id = $1;`;
+  const query = `UPDATE pending_admin_req SET approved = true WHERE id = $1;`;
+
+  const result = await client.query(query, [Pending_Request_id]);
+
+  console.log(result);
+  return result.rowCount > 0 ? true : false;
+};
+
+export const Delete_From_Admin_Table_By_ID = async (id) => {
+  const query = `delete from admin where id=$1;`;
+
+  const result = await client.query(query, [id]);
+
+  return result.rowCount > 0 ? true : false;
+};
+
+export const Delete_Pending_Req_By_ID1 = async (Pending_Request_id) => {
+  //   const query = `SELECT * FROM pending_admin_req WHERE id = $1;`;
+  const query = `UPDATE pending_admin_req SET is_delete = true WHERE id = $1;`;
+
+  const result = await client.query(query, [Pending_Request_id]);
+
+  console.log(result);
+  return result.rowCount > 0 ? true : false;
 };

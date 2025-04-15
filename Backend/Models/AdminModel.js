@@ -122,7 +122,7 @@ export const loginAdmin = async (username, password) => {
 
   if (result.rows.length === 0) {
     console.log(result);
-    throw new Error("Admin not found");
+    throw new Error("dmin not found");
   }
 
   const user = result.rows[0];
