@@ -1,10 +1,12 @@
 import React from 'react'
-
+import Navbar from "@/components/Navbar";
+import SuperAdminBody from "./SuperAdminBody";
 function SuperAdminHome() {
   return (
-    <div>
-      <h1>HI Abhi </h1>
-    </div>
+    <>
+    <Navbar />
+    <SuperAdminBody />
+    </>
   )
 }
 

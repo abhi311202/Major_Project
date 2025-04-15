@@ -52,7 +52,6 @@ function Home() {
     <div className="w-full overflow-x-hidden  ">
       <Navbar />
       <HeroPage />
-      <br></br>
       <Services />
       <HorizontalScrollCarousel />
       <ReadMore />
