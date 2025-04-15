@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import MyProfileSection from "./MyProfileSection";
 import {
   FiBarChart,
   FiChevronDown,
@@ -13,13 +14,24 @@ import {
 import { motion } from "framer-motion";
 
 export const AdminBody = () => {
+  const [selected, setSelected] = useState("Admin Profile");
+
   return (
-    <div className="flex bg-indigo-50">
-      <Sidebar />
-      <ExampleContent />
+    <div className="flex h-screen bg-indigo-50 overflow-hidden">
+      <Sidebar selected={selected} setSelected={setSelected} />
+      
+      {/* Right Side Content */}
+      <div className="flex-1 overflow-auto p-6">
+        {selected === "Admin Profile" ? (
+          <MyProfileSection />
+        ) : (
+          <ExampleContent selected={selected} />
+        )}
+      </div>
     </div>
   );
 };
+
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
@@ -228,6 +240,8 @@ const ToggleClose = ({ open, setOpen }) => {
   );
 };
 
-const ExampleContent = () => <div className="h-[200vh] w-full bg-black"></div>;
+const ExampleContent = () => <div className="h-[200vh] w-full ">
+  <h1 className="text-white">hello</h1>
+</div>;
 
 export default AdminBody;

@@ -4,8 +4,7 @@ import Logout from "./Logout";
 // import Login from "./Login";
 // import AdminLogin from "./AdminLogin";
 import { useAuth1 } from "../context/AuthProvider1";
-// import AdminLogout from "./AdminLogout";
-
+import { useAuth2 } from "../context/AuthProvider2";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -14,26 +13,20 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-
-
-
-// import "./Navbar1.css"
+import SuperAdminLogout from "./SuperAdminLogout"; // Assuming you have a SuperAdminLogout component
 
 const Navbar = () => {
   const [authUser, setAuthUser] = useAuth();
   const [authAdmin, setAuthAdmin] = useAuth1();
+  const [authAdmin2, setAuthAdmin2] = useAuth2(); // This handles the Super Admin state
 
-
- 
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
   );
 
   const element = document.documentElement;
-
-  
 
   const [sticky, setSticky] = useState(false);
   useEffect(() => {
@@ -49,6 +42,7 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   const navItems = (
     <>
       <li>
@@ -74,7 +68,6 @@ const Navbar = () => {
   const handleClick = () => {
     navigate("/UserLogin"); // opens the new page
   };
-
 
   return (
     <>
@@ -117,39 +110,56 @@ const Navbar = () => {
               Legal AI
             </a>
           </div>
-          <div className="navbar-start hidden lg:flex">
+          <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal px-1">
               {navItems} {/* Now always visible */}
             </ul>
           </div>
+          <div className="hidden lg:flex items-center gap-4 ml-6">
           <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-2 bg-gray-200 text-black px-1 py-1 rounded-md whitespace-nowrap">Select Languages <ChevronDown size={16} /></DropdownMenuTrigger>
-          <DropdownMenuContent className="">
-            <DropdownMenuItem>English</DropdownMenuItem>
-            <DropdownMenuItem>Hindi</DropdownMenuItem>
-            <DropdownMenuItem>Bengali</DropdownMenuItem>
-            
-          </DropdownMenuContent>
-        </DropdownMenu>
-
+            <DropdownMenuTrigger className="flex items-center gap-2 bg-gray-200 text-black px-1 py-1 rounded-md whitespace-nowrap">
+              Select Languages <ChevronDown size={16} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="">
+              <DropdownMenuItem>English</DropdownMenuItem>
+              <DropdownMenuItem>Hindi</DropdownMenuItem>
+              <DropdownMenuItem>Bengali</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          </div>
 
           <div className="navbar-end space-x-3">
+            {authUser || authAdmin ? (
+              <Logout /> // Show Logout for both user or admin
+            ) : authAdmin2 ? (
+              <div className="flex items-center justify-center space-x-2">
+                <Button onClick={() => navigate("/SuperAdminHome")}>Dashboard</Button> {/* Show Dashboard */}
+                <SuperAdminLogout /> {/* Show Super Admin Logout */}
+                
+              </div>
+            ) : (
+              <div className="flex items-center justify-center space-x-2">
+                <Button onClick={() => navigate("/UserLogin")}>User Login</Button>
 
-          {authUser || authAdmin ? (
-  <Logout /> // Show Logout for both user or admin
-) : (
-  <div className="flex items-center justify-center space-x-2">
-    <Button onClick={() => navigate("/UserLogin")}>User Login</Button>
-    <Button onClick={() => navigate("/AdminLogin")}>Admin Login</Button>
-  </div>
-)}
-
-
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button>Admin Login</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => navigate("/AdminLogin")}>
+                      Admin Login
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate("/SuperAdminLogin")}>
+                      Super Admin
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
           </div>
         </div>
-        
       </div>
-      <hr class="border-t border-gray-300 my-0"></hr>
+      <hr className="border-t border-gray-300 my-0"></hr>
     </>
   );
 };

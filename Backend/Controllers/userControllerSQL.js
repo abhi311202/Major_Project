@@ -1,4 +1,3 @@
-// const { createUser } = require('../models/userModel');
 import {
   createUser,
   checkUserExistsByEmail,
@@ -7,7 +6,7 @@ import {
   loginUser,
   getuserbyusername,
 } from "../Models/UserModelSQL.js";
-
+ 
 export const registerUser = async (req, res) => {
   console.log(req.body);
   try {
@@ -69,5 +68,13 @@ export const logout = async (req, res) => {
   } catch (error) {
     res.status(500).json({ errors: "Error in logout" });
     console.log("Error in logout", error);
+  }
+};
+
+export const demo = async (req, res) => {
+  try {
+    res.status(200).json({ message: "Valid token...!" });
+  } catch (error) {
+    res.status(500).json({ errors: error });
   }
 };

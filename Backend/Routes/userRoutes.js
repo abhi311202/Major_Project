@@ -1,11 +1,18 @@
 import express from "express";
 const router = express.Router();
 
-// const { registerUser } = require("../Controllers/userControllerSQL");
-import { registerUser, userLogin } from "../Controllers/userControllerSQL.js";
+import userMiddleware from "../Middlewares/user.mid.js";
+
+import {
+  registerUser,
+  userLogin,
+  logout,
+  demo,
+} from "../Controllers/userControllerSQL.js";
 
 router.post("/register", registerUser);
 router.post("/login", userLogin);
+router.post("/logout", logout);
+router.post("/verify", userMiddleware, demo);
 
-// module.exports = router;
 export default router;
