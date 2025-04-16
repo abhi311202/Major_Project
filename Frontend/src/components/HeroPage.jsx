@@ -10,7 +10,7 @@ export const HeroPage = () => {
         <p className="text-lg text-gray-600 mb-8">
           Empowering legal document analysis with AI-powered summarization and classification.
         </p>
-        <button className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300">
+        <button className="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300">
           Get Started
         </button>
       </div>

@@ -150,7 +150,7 @@ export const loginAdmin = async (username, password) => {
 
   return {
     message: "Login Successful!!",
-    user: userWithoutPassword,
+    Admin: userWithoutPassword,
     token,
   };
 };

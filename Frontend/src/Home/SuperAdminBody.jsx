@@ -26,7 +26,7 @@ export const SuperAdminBody = () => {
      <div className="flex-1 overflow-auto p-6">
   {selected === "Dashboard" ? (
     <MyProfileSection2 />
-  ) : selected === "Sales" ? (
+  ) : selected === "Manage Admin" ? (
     <ManageAdmin />
   ) : (
     <ExampleContent selected={selected} />
@@ -65,8 +65,8 @@ const Sidebar = ({ selected, setSelected }) => {
           open={open}
         />
         <Option
-          Icon={FiDollarSign}
-          title="Sales"
+          Icon={FiUsers}
+          title="Manage Admin"
           selected={selected}
           setSelected={setSelected}
           open={open}

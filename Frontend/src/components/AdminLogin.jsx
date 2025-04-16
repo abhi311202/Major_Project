@@ -29,8 +29,10 @@ const UserLogin = () => {
       if (response.status === 200) {
         // toast.success('Login successful!');
         alert("Login sucessfull")
-        setAuthUser(response.data.user);
+        setAuthUser(response.data.Admin);
         navigate('/'); // ✅ Redirect to home/dashboard
+        // console.log(response.data);
+        localStorage.setItem("Admin", JSON.stringify(response.data.Admin));
       }
     } catch (error) {
       console.error('Login error:', error);

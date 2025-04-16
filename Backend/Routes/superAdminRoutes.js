@@ -15,7 +15,7 @@ import {
 router.post("/login", adminLogin);
 router.get("/AdminRequest", adminRequest);
 router.post("/logout", logout);
-router.post("/AprooveReq", Approve_Req);
+router.post("/ApproveReq", Approve_Req);
 router.post("/DeleteReq", Delete_Req);
 //   router.post("/verify", userMiddleware, demo);
 

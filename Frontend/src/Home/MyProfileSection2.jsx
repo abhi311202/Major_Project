@@ -4,7 +4,7 @@ import { Pencil } from "lucide-react"; // Optional, for the pencil icon
 const MyProfileSection2 = () => {
   const [profileData, setProfileData] = useState({});
 
-  const storedObjectString = localStorage.getItem("Admin");
+  const storedObjectString = localStorage.getItem("SuperAdmin");
   const myObject = JSON.parse(storedObjectString);
   console.log(myObject);
   useEffect(() => {
@@ -112,7 +112,7 @@ const MyProfileSection2 = () => {
 </div>
 
 
-      {/* Buttons */}
+      
       {/* Buttons */}
       <div className="flex flex-wrap gap-4 pl-4">
         <button className="bg-black  text-white font-medium px-5 py-2 rounded-lg shadow-md hover:brightness-110 transition-all duration-200">

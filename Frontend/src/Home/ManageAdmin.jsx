@@ -5,27 +5,33 @@ import axios from "axios";
 const ManageAdmin = () => {
   const [admins, setAdmins] = useState([]);
 
-  useEffect(() => {
-    const fetchAdmins = async () => {
-      try {
-        const res = await axios.get("http://localhost:4001/SuperAdmin/AdminRequest");
-        if (res.data.success) {
-          setAdmins(res.data.data);
-        }
-      } catch (err) {
-        console.error("Error fetching admin requests:", err);
-      }
-    };
+  const fetchAdmins = async () => {
+    try {
+      const res = await axios.get("http://localhost:4001/SuperAdmin/AdminRequest");
+      if (res.data.success) {
+        // console.log(res.data.data,"Abh");
+        setAdmins(res.data.data);
+        console.log(admins);
 
-    fetchAdmins();
+      }
+    } catch (err) {
+      console.error("Error fetching admin requests:", err);
+    }
+  };
+  
+  useEffect(() => {
+    fetchAdmins(); // now it still works inside useEffect
   }, []);
+  
 
   const handleApprove = async (pendingId) => {
-    const superAdminId = localStorage.getItem("superAdminId"); // Dynamically fetched
-  
+    const superAdmin = JSON.parse(localStorage.getItem("SuperAdmin")) // Dynamically fetched
+    console.log(superAdmin);
+    console.log(pendingId);
+    console.log(superAdmin.id);
     try {
-      const res = await axios.post("http://localhost:4001/SuperAdmin/AprooveReq", {
-        SuperAdmin_id: superAdminId,
+      const res = await axios.post("http://localhost:4001/SuperAdmin/ApproveReq", {
+        SuperAdmin_id: superAdmin.id,
         Pending_Request_id: pendingId,
       });
   
@@ -75,7 +81,7 @@ const ManageAdmin = () => {
             <div className="absolute top-2 right-2 flex gap-2">
               {/* Approve Admin Button */}
               <button
-              onClick={() => handleApprove(admin._id)}
+              onClick={() => handleApprove(admin.id)}
                 className="bg-black text-white font-medium px-3 py-1.5 rounded text-xs hover:bg-gray-900 border  shadow-sm transition"
               >
                 Approve
@@ -83,8 +89,8 @@ const ManageAdmin = () => {
 
               {/* Remove Admin Button */}
               <button
-              onClick={() => handleReject(admin._id)}
-              className="bg-red-600 text-white font-medium px-3 py-1.5 rounded text-xs hover:bg-red-700 border shadow-sm transition"
+              onClick={() => handleReject(admin.id)}
+              className="bg-black text-white font-medium px-3 py-1.5 rounded text-xs hover:bg-black border shadow-sm transition"
             >
               Reject
             </button>

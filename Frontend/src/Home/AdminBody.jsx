@@ -17,7 +17,7 @@ export const AdminBody = () => {
   const [selected, setSelected] = useState("Admin Profile");
 
   return (
-    <div className="flex h-screen bg-indigo-50 overflow-hidden">
+    <div className="flex h-screen bg-white overflow-hidden">
       <Sidebar selected={selected} setSelected={setSelected} />
       
       {/* Right Side Content */}
@@ -116,7 +116,7 @@ const Option = ({ Icon, title, selected, setSelected, open, notifs }) => {
       onClick={() => setSelected(title)}
       className={`relative flex h-10 w-full items-center rounded-md transition-colors ${
         selected === title
-          ? "bg-indigo-100 text-indigo-800"
+          ? "bg-black text-white"
           : "text-slate-500 hover:bg-slate-100"
       }`}
     >
@@ -138,20 +138,7 @@ const Option = ({ Icon, title, selected, setSelected, open, notifs }) => {
         </motion.span>
       )}
 
-      {notifs && open && (
-        <motion.span
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-          }}
-          style={{ y: "-50%" }}
-          transition={{ delay: 0.5 }}
-          className="absolute right-2 top-1/2 size-4 rounded bg-indigo-500 text-xs text-white"
-        >
-          {notifs}
-        </motion.span>
-      )}
+      
     </motion.button>
   );
 };

@@ -52,7 +52,7 @@ const Navbar = () => {
         <a href="about">Search</a>
       </li>
       <li>
-        <a href="services">Services</a>
+      <a href="services">Services</a>
       </li>
       <li>
         <a href="team">Team</a>
@@ -130,7 +130,10 @@ const Navbar = () => {
 
           <div className="navbar-end space-x-3">
             {authUser || authAdmin ? (
-              <Logout /> // Show Logout for both user or admin
+              <div className="flex items-center justify-center space-x-2">
+               <Button onClick={() => navigate("/AdminHome")}>Dashboard</Button>
+              <Logout /> 
+              </div>
             ) : authAdmin2 ? (
               <div className="flex items-center justify-center space-x-2">
                 <Button onClick={() => navigate("/SuperAdminHome")}>Dashboard</Button> {/* Show Dashboard */}

@@ -48,14 +48,14 @@ export const Services = () => {
       {/* Arrows */}
       <button
         onClick={() => scroll("left")}
-        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-black text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
       >
         <FiArrowLeft />
       </button>
 
       <button
         onClick={() => scroll("right")}
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-black text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
       >
         <FiArrowRight />
       </button>
@@ -70,12 +70,12 @@ export const Services = () => {
             key={index}
             className="w-[400px] h-[400px] flex-shrink-0 bg-white text-gray-900 rounded-3xl p-8 shadow-xl hover:scale-105 hover:shadow-2xl transition-transform duration-300 ease-in-out"
           >
-            <p className="uppercase text-sm font-medium tracking-wide mb-2 text-indigo-600">
+            <p className="uppercase text-sm font-medium tracking-wide mb-2 text-black">
               {service.title}
             </p>
             <h3 className="text-2xl md:text-3xl font-semibold mb-4">{service.heading}</h3>
-            <p className="text-md md:text-lg mb-6 text-gray-600">{service.description}</p>
-            <button className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition">
+            <p className="text-md md:text-lg mb-6 text-black">{service.description}</p>
+            <button className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition">
               Learn More <FiArrowUpRight />
             </button>
           </div> 

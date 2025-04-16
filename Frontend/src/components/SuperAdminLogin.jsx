@@ -29,9 +29,10 @@ const SuperAdminLogin = () => {
       if (response.status === 200) {
         // toast.success('Login successful!');
         alert("Login sucessfull")
-        setAuthUser(response.data.user);
+        console.log(response);
+        setAuthUser(response.data.SuperAdmin);
         navigate('/Home2'); // ✅ Redirect to home/dashboard
-        localStorage.setItem("Admin", JSON.stringify(response.data.user));
+        localStorage.setItem("SuperAdmin", JSON.stringify(response.data.SuperAdmin));
         // console.log(response);
       }
     } catch (error) {

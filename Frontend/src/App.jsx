@@ -20,8 +20,9 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Home2" element={<Home />} />
-          <Route path="/Home" element={<Home />} /> {/* ✅ Add this line */}
-          <Route path="/AdminHome" element={<AdminHome />} />
+          <Route path="/Home" element={<Home />} />
+          <Route path="/Home2" element={<Home />} />
+        
           <Route path="/SuperAdminHome" element={<SuperAdminHome />} />
           <Route path="/UserLogin" element={<UserLogin />} />
           <Route path="/AdminLogin" element={<AdminLogin />} />

@@ -52,6 +52,7 @@ function Home() {
     <div className="w-full overflow-x-hidden  ">
       <Navbar />
       <HeroPage />
+      <section id="services" className="w-full"></section>
       <Services />
       <HorizontalScrollCarousel />
       <ReadMore />

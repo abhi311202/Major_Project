@@ -30,7 +30,7 @@ const Footer = () => {
       </div>
 
       {/* Copyright */}
-      <div className="text-center py-4 text-sm bg-gray-200">
+      <div className="text-center py-4 text-sm bg-gray-200 text-black">
         © {new Date().getFullYear()}{" "}
         <a
           href="https://mdbootstrap.com/"
