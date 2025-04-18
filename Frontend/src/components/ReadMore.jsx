@@ -8,9 +8,8 @@ const ReadMore = () => {
     title: "Welcome to LegalAI",
     imgSrc:
       "https://images.unsplash.com/photo-1543286386-713bdd548da4?auto=format&fit=crop&w=1740&q=80",
-    description:
-      "LegalAI simplifies legal research and case analysis by providing instant summaries and classifications. Upload a legal document, and our AI will identify whether it’s civil, criminal, corporate, or taxation-related. This tool saves time for law professionals, researchers, and students by offering concise overviews, reducing the need to read lengthy judgments or contracts.",
-  };
+    description:" In the legal sector, handling large volumes of documents is aroutine but essential task. Legal practitioners, researchers, and even clients frequently deal with extensive paperwork that demands careful review and analysis. However, this manual process is time-consuming, prone to errors, and can lead to inefficiencies within the legal workflow. Our solution aims to address these challenges through the power of ArtificialIntelligence and Machine Learning.",
+  }; 
 
   return (
     <section className="bg-gray-300 text-black min-h-screen flex items-center justify-center px-4 py-12">
@@ -28,7 +27,7 @@ const ReadMore = () => {
         </p>
         <button
           onClick={() => setShowModal(true)}
-          className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-black rounded-full text-lg font-medium transition duration-300"
+          className="px-8 py-3 bg-black hover:bg-gray-700 text-white rounded-full text-lg font-medium transition duration-300"
         >
           Read More
         </button>
@@ -54,7 +53,11 @@ const ReadMore = () => {
               {item.description}
               <br />
               <br />
-              Our platform allows both summary and classification uploads, providing accurate insights in seconds. Built for the future of law.
+              Our AI-based service specializes in summarizing and classifying
+                legal documents to streamline legal processes. By leveraging
+                advanced machine learning (ML) techniques, we have developed
+                tools that assist legal professionals in managing information
+                overload, improving accuracy, and enhancing workflow efficiency.
             </p>
           </div>
         </div>
