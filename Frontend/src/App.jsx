@@ -7,6 +7,7 @@ import AdminHome from "./Home/AdminHome";
 import AdminSignUp from "./components/AdminSignUp";
 import AdminLogin from "./components/AdminLogin";
 import SuperAdminHome from "./Home/SuperAdminHome";
+
 import SuperAdminLogin from "./components/SuperAdminLogin";
 
 
@@ -22,7 +23,7 @@ const App = () => {
           <Route path="/Home2" element={<Home />} />
           <Route path="/Home" element={<Home />} />
           <Route path="/Home2" element={<Home />} />
-        
+          <Route path="/AdminHome" element={<AdminHome />} />
           <Route path="/SuperAdminHome" element={<SuperAdminHome />} />
           <Route path="/UserLogin" element={<UserLogin />} />
           <Route path="/AdminLogin" element={<AdminLogin />} />

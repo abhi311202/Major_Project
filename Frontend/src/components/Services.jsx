@@ -48,14 +48,14 @@ export const Services = () => {
       {/* Arrows */}
       <button
         onClick={() => scroll("left")}
-        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-black text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
+        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-black text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition"
       >
         <FiArrowLeft />
       </button>
 
       <button
         onClick={() => scroll("right")}
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-black text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-black text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition"
       >
         <FiArrowRight />
       </button>
@@ -75,7 +75,7 @@ export const Services = () => {
             </p>
             <h3 className="text-2xl md:text-3xl font-semibold mb-4">{service.heading}</h3>
             <p className="text-md md:text-lg mb-6 text-black">{service.description}</p>
-            <button className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition">
+            <button className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 transition">
               Learn More <FiArrowUpRight />
             </button>
           </div> 
