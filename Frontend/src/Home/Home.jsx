@@ -19,14 +19,10 @@ import ReadMore from "@/components/ReadMore";
 import Footer from "@/components/Footer";
 import { useLocation } from "react-router-dom";
 
-
 function Home() {
   const { section } = useParams();
   const navigate = useNavigate();
   const [authUser, setAuthUser] = useAuth();
-
-
-
 
   useEffect(() => {
     if (section) {
@@ -57,14 +53,12 @@ function Home() {
       <Navbar />
       <HeroPage />
       <section id="services" className="w-full">
-      <Services />
+        <Services />
       </section>
       <section id="team" className="w-full"></section>
       <HorizontalScrollCarousel />
       <ReadMore />
       <Footer />
-      
-      
     </div>
   );
 }
