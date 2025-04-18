@@ -6,13 +6,13 @@ import userMiddleware from "../Middlewares/user.mid.js";
 import {
   registerAdmin,
   adminLogin,
-  //   logout,
+  logout,
   //   demo,
 } from "../Controllers/adminController.js";
 
 router.post("/register", registerAdmin);
 router.post("/login", adminLogin);
-// router.post("/logout", logout);
+router.post("/logout", logout);
 // router.post("/verify", userMiddleware, demo);
 
 export default router;
