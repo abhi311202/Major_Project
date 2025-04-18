@@ -57,6 +57,7 @@ function Home() {
       </section>
       <section id="team" className="w-full"></section>
       <HorizontalScrollCarousel />
+      <section id="about" className="w-full"></section>
       <ReadMore />
       <Footer />
     </div>
