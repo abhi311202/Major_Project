@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MyProfileSection from "./MyProfileSection";
+import UploadNewDocument from "../Admin/UploadNewDocument";
 import {
   FiBarChart,
   FiChevronDown,
@@ -14,7 +15,8 @@ import {
 import { motion } from "framer-motion";
 
 export const AdminBody = () => {
-  const [selected, setSelected] = useState("Admin Profile");
+  
+  const [selected, setSelected] = useState("Dashboard");
 
   return (
     <div className="flex h-screen bg-white overflow-hidden">
@@ -22,8 +24,10 @@ export const AdminBody = () => {
       
       {/* Right Side Content */}
       <div className="flex-1 overflow-auto p-6">
-        {selected === "Admin Profile" ? (
+        {selected === "Dashboard" ? (
           <MyProfileSection />
+        ): selected === "UploadNewDocument" ? (
+          <UploadNewDocument />
         ) : (
           <ExampleContent selected={selected} />
         )}
@@ -33,9 +37,9 @@ export const AdminBody = () => {
 };
 
 
-const Sidebar = () => {
+const Sidebar = ({ selected, setSelected }) => {
   const [open, setOpen] = useState(true);
-  const [selected, setSelected] = useState("Dashboard");
+  
 
   useEffect(() => {
     console.log(selected);
@@ -61,7 +65,7 @@ const Sidebar = () => {
         />
         <Option
           Icon={FiDollarSign}
-          title="Sales"
+          title="UploadNewDocument"
           selected={selected}
           setSelected={setSelected}
           open={open}

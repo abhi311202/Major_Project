@@ -99,7 +99,7 @@ const UserLogin = () => {
           Don't have an account? <span className="link" onClick={handleClick}>Sign Up</span>
         </p>
 
-        <div className="divider">or</div>
+        <div className="divider"></div>
 
         <button className="google-btn">
           <svg width={20} viewBox="0 0 512 512"><path d="..."/></svg>

@@ -4,13 +4,14 @@ import Navbar from '../components/Navbar';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 import { useState } from 'react'; // ✅ Fix this
 
 
 const AdminSignUp = () => {
     const [profilePic, setProfilePic] = useState(null); // file object
     const [profilePicUrl, setProfilePicUrl] = useState(""); // cloudinary image URL
+    const [preview, setPreview] = useState(null);
     // const [name, setName] = useState("");
     // const [username, setUsername] = useState("");
     // const [password, setPassword] = useState("");
@@ -28,6 +29,7 @@ const AdminSignUp = () => {
 const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setPreview(URL.createObjectURL(file));
       setProfilePic(file);
     }
   };
@@ -80,12 +82,12 @@ const handleImageChange = (e) => {
       
           const response = await axios.post("http://localhost:4001/Admin/register", userInfo);
       
-          toast.success("Signup successful!");
+          alert("Signup successful!");
           navigate("/AdminLogin");
       
         } catch (err) {
           console.error(err);
-          toast.error("Registration failed!");
+          alert("Registration failed!");
         }
       
         // setLoading(false);
@@ -97,27 +99,29 @@ const handleImageChange = (e) => {
 <form className="form" onSubmit={handleSubmit(onSubmit)}>
   <h2 className="title">Admin Registration</h2>
 
-  <label className="form-control w-full max-w-xs">
-  <div className="label">
-    <span className="label-text">Upload Profile Picture</span>
+  <div className="form-control w-full max-w-xs items-center gap-4 ">
+      {/* Label wraps the image so it's clickable */}
+      <label htmlFor="profile-upload" className="cursor-pointer">
+        <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-300">
+          {preview ? (
+            <img src={preview} alt="Profile Preview" className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
+              Upload Profile
+            </div>
+          )}
+        </div>
+      </label>
+
+      {/* Hidden file input */}
+      <input
+        id="profile-upload"
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleImageChange}
+      />
   </div>
-  
-  <input
-    type="file"
-    // value={profilePicUrl}
-    
-    accept="image/*"
-    className="file-input file-input-bordered w-full"
-    onChange={handleImageChange}
-  />
-</label>
-
-{/* Image Preview */}
-<div className="mt-4">
-  
-</div>
-
-
 
   <div className="form-grid">
     <div className="form-group">
@@ -323,7 +327,7 @@ const handleImageChange = (e) => {
     </div>
     
 
-    <div className="form-group">
+    <div className="form-group ml-64">
       <label style={{ visibility: 'hidden' }}>Submit</label>
       <button type="submit" className="submit-btn">Register</button>
     </div>

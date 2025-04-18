@@ -17,12 +17,16 @@ import { HeroPage } from "@/components/HeroPage";
 import HorizontalScrollCarousel from "@/components/HorizontalScrollCarousel ";
 import ReadMore from "@/components/ReadMore";
 import Footer from "@/components/Footer";
+import { useLocation } from "react-router-dom";
 
 
 function Home() {
   const { section } = useParams();
   const navigate = useNavigate();
   const [authUser, setAuthUser] = useAuth();
+
+
+
 
   useEffect(() => {
     if (section) {
@@ -52,8 +56,10 @@ function Home() {
     <div className="w-full overflow-x-hidden  ">
       <Navbar />
       <HeroPage />
-      <section id="services" className="w-full"></section>
+      <section id="services" className="w-full">
       <Services />
+      </section>
+      <section id="team" className="w-full"></section>
       <HorizontalScrollCarousel />
       <ReadMore />
       <Footer />
