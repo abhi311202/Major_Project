@@ -10,8 +10,8 @@ const TeamSection = () => {
       <div
         className="flex overflow-x-auto gap-8 pb-6 scroll-smooth"
         style={{
-          scrollbarWidth: "none",          // Firefox
-          msOverflowStyle: "none",         // IE/Edge
+          scrollbarWidth: "none", // Firefox
+          msOverflowStyle: "none", // IE/Edge
         }}
         onWheel={(e) => {
           e.currentTarget.scrollLeft += e.deltaY; // smooth horizontal scroll on mouse wheel
@@ -20,15 +20,17 @@ const TeamSection = () => {
         {teamMembers.map((member) => (
           <div
             key={member.id}
-            className="min-w-[320px] max-w-[320px] flex-shrink-0 bg-white rounded-3xl shadow-xl overflow-hidden transform hover:scale-105 transition duration-300"
+            className="min-w-[340px] max-w-[340px] flex-shrink-0 bg-white rounded-3xl shadow-xl overflow-hidden transform hover:scale-105 transition duration-300"
           >
             <img
               src={member.url}
               alt={member.title}
-              className="w-full h-[320px] object-cover"
+              className="w-full h-[340px] object-cover"
             />
             <div className="p-5 text-center">
-              <h3 className="text-2xl font-semibold text-gray-800">{member.title}</h3>
+              <h3 className="text-2xl font-semibold text-gray-800">
+                {member.title}
+              </h3>
               <p className="text-sm text-gray-500">{member.role}</p>
             </div>
           </div>
@@ -41,33 +43,33 @@ const TeamSection = () => {
 const teamMembers = [
   {
     id: 1,
-    url: "https://media.licdn.com/dms/image/v2/D4D03AQGvudvHm_EMDQ/profile-displayphoto-shrink_400_400/B4DZYK3WC.G4Ak-/0/1743939003516?e=1750291200&v=beta&t=CQDy3_cC775ngcxfsrIDpmZgdN5ADlDY3XRsp9dURXU",
-    title: "John Doe",
-    role: "Frontend Developer",
+    url: "https://res.cloudinary.com/dqsd7cbfg/image/upload/v1741432654/Project/gtjip1zv5xctxnc4efqq.jpg",
+    title: "Abhishek Kumar Rai",
+    role: "Department of IT - NEHU",
   },
   {
     id: 2,
-    url: "https://media.licdn.com/dms/image/v2/D4D03AQGvudvHm_EMDQ/profile-displayphoto-shrink_400_400/B4DZYK3WC.G4Ak-/0/1743939003516?e=1750291200&v=beta&t=CQDy3_cC775ngcxfsrIDpmZgdN5ADlDY3XRsp9dURXU",
-    title: "Jane Smith",
-    role: "UI/UX Designer",
+    url: "https://res.cloudinary.com/dqsd7cbfg/image/upload/v1741432654/Project/doc5hyycdyablzd7wcrc.jpg",
+    title: "Abhi Suresh Nitnaware",
+    role: "Department of IT - NEHU",
   },
   {
     id: 3,
-    url: "https://media.licdn.com/dms/image/D4D03AQGvudvHm_EMDQ/profile-displayphoto-shrink_400_400/0/1743939003516",
-    title: "Robert Wilson",
-    role: "Backend Developer",
+    url: "https://media.licdn.com/dms/image/v2/D4D03AQGvudvHm_EMDQ/profile-displayphoto-shrink_400_400/B4DZYK3WC.G4Ak-/0/1743939003516?e=1750291200&v=beta&t=CQDy3_cC775ngcxfsrIDpmZgdN5ADlDY3XRsp9dURXU",
+    title: "Sanskar Kashyap",
+    role: "Department of IT - NEHU",
   },
   {
     id: 4,
-    url: "https://media.licdn.com/dms/image/D4D03AQGvudvHm_EMDQ/profile-displayphoto-shrink_400_400/0/1743939003516",
-    title: "Emily Davis",
-    role: "Product Manager",
+    url: "https://res.cloudinary.com/dqsd7cbfg/image/upload/v1741432654/Project/wv9hmhtsmz0a6p9gueyn.jpg",
+    title: "Ujjwal Kumar",
+    role: "Department of IT - NEHU",
   },
   {
     id: 5,
-    url: "https://media.licdn.com/dms/image/D4D03AQGvudvHm_EMDQ/profile-displayphoto-shrink_400_400/0/1743939003516",
-    title: "Alex Johnson",
-    role: "Cloud Architect",
+    url: "https://res.cloudinary.com/dqsd7cbfg/image/upload/v1742068841/lapen_rtxbbw.jpg",
+    title: "Lapyntngenlang Kharkrang",
+    role: "Department of IT - NEHU",
   },
 ];
 
