@@ -9,11 +9,13 @@ import AdminLogin from "./components/AdminLogin";
 import SuperAdminHome from "./Home/SuperAdminHome";
 
 import SuperAdminLogin from "./components/SuperAdminLogin";
-
+import { Toaster } from "react-hot-toast";
 const App = () => {
   const user = JSON.parse(localStorage.getItem("Users"));
   return (
     <>
+
+    
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Home2" element={<Home />} />

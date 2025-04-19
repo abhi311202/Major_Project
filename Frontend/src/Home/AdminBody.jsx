@@ -5,7 +5,7 @@ import {
   FiBarChart,
   FiChevronDown,
   FiChevronsRight,
-  FiDollarSign,
+  FiUpload,
   FiHome,
   FiMonitor,
   FiShoppingCart,
@@ -64,48 +64,14 @@ const Sidebar = ({ selected, setSelected }) => {
           open={open}
         />
         <Option
-          Icon={FiDollarSign}
+          Icon={FiUpload }
           title="UploadNewDocument"
           selected={selected}
           setSelected={setSelected}
           open={open}
           notifs={3}
         />
-        <Option
-          Icon={FiMonitor}
-          title="View Site"
-          selected={selected}
-          setSelected={setSelected}
-          open={open}
-        />
-        <Option
-          Icon={FiShoppingCart}
-          title="Products"
-          selected={selected}
-          setSelected={setSelected}
-          open={open}
-        />
-        <Option
-          Icon={FiTag}
-          title="Tags"
-          selected={selected}
-          setSelected={setSelected}
-          open={open}
-        />
-        <Option
-          Icon={FiBarChart}
-          title="Analytics"
-          selected={selected}
-          setSelected={setSelected}
-          open={open}
-        />
-        <Option
-          Icon={FiUsers}
-          title="Members"
-          selected={selected}
-          setSelected={setSelected}
-          open={open}
-        />
+        
       </div>
 
       <ToggleClose open={open} setOpen={setOpen} />
