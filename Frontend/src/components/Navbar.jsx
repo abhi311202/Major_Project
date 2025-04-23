@@ -115,7 +115,7 @@ const Navbar = () => {
               {navItems} {/* Now always visible */}
             </ul>
           </div>
-          <div className="hidden lg:flex items-center gap-4 ml-6">
+          <div className="hidden lg:flex items-center gap-4 ml-12">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 bg-gray-200 text-black px-1 py-1 rounded-md whitespace-nowrap">
               Select Languages <ChevronDown size={16} />

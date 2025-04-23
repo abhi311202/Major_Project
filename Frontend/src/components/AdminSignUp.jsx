@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 // import toast from "react-hot-toast";
 import { useState } from 'react'; // ✅ Fix this
+import toast, { Toaster } from "react-hot-toast";
 
 
 const AdminSignUp = () => {
@@ -82,12 +83,12 @@ const handleImageChange = (e) => {
       
           const response = await axios.post("http://localhost:4001/Admin/register", userInfo);
       
-          alert("Signup successful!");
+          toast.success("Signup successful!");
           navigate("/AdminLogin");
       
         } catch (err) {
           console.error(err);
-          alert("Registration failed!");
+          toast.error("Registration failed!");
         }
       
         // setLoading(false);

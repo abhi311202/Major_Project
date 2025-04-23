@@ -3,47 +3,36 @@ import { FiArrowLeft, FiArrowRight, FiArrowUpRight } from "react-icons/fi";
 
 const services = [
   {
-    title: "Collaborate",
-    heading: "Built for all of us.",
+    title: "Ask LegalAI",
+    heading: "Summarisation",
     description:
-      "Work .",
+      "AI-driven tool that condenses long documents into concise summaries for quick insights.",
   },
   {
-    title: "Quality",
-    heading: "Never compromise.",
+    title: "Ask LegalAI",
+    heading: "Classification",
     description:
-      "Deliver .",
+      "AI that categorizes documents into specific types, improving organization and retrieval.",
   },
   {
-    title: "Modern",
-    heading: "Dress for the best.",
+    title: "Ask LegalAI",
+    heading: "Q&A Chatbot",
     description:
-      "Embrace.",
+      "Intelligent chatbot that answers user questions by extracting relevant information from documents.",
   },
   {
-    title: "Performance",
-    heading: "Engineered to Excel.",
+    title: "Ask LegalAI",
+    heading: "Vision Q&A Chatbot",
     description:
-      "Experience.",
+      "A vision-enabled chatbot that answers questions based on image or visual content analysis.",
   },
   {
-    title: "Performance",
-    heading: "Engineered to Excel.",
+    title: "Ask LegalAI",
+    heading: "Agent",
     description:
-      "Experience.",
+      "AI-powered agent that assists users with tasks by providing automated responses and actions.",
   },
-  {
-    title: "Performance",
-    heading: "Engineered to Excel.",
-    description:
-      "Experience.",
-  },
-  {
-    title: "Performance",
-    heading: "Engineered to Excel.",
-    description:
-      "Experience.",
-  },
+ 
 ];
 
 export const Services = () => {
@@ -94,7 +83,7 @@ export const Services = () => {
             <h3 className="text-2xl md:text-3xl font-semibold mb-4">{service.heading}</h3>
             <p className="text-md md:text-lg mb-6 text-black">{service.description}</p>
             <button className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 transition">
-              Learn More <FiArrowUpRight />
+              Explore <FiArrowUpRight />
             </button>
           </div> 
         ))}

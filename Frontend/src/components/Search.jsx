@@ -15,17 +15,13 @@ const Search = () => {
     {/* Left Text Section */}
     <div className="w-full md:w-1/2">
       <div className="space-y-8">
-        <h1 className="text-4xl md:text-5xl font-semibold text-center text-gray-800 mb-12">
-          Hello, welcome here to learn something{" "}
-          <span className="text-4xl md:text-5xl font-semibold text-center text-gray-800 mb-12">
-            new everyday
-          </span>
+      <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-6 leading-tight">
+        Welcome to <span className="text-black">AI-Powered Document Search</span>
+        
         </h1>
+
         <p className="text-lg text-black">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ad
-          obcaecati earum quisquam commodi cupiditate, reprehenderit rerum
-          reiciendis, esse distinctio officia laborum. Non fuga mollitia
-          rerum harum possimus odit beatae laborum.
+        The Document Search feature combines semantic and full-text search to help users find the most relevant legal documents, even if they don’t use exact keywords. It applies filters, removes weak documents, and gives fast, accurate results using AI — making legal research simple and effective.
         </p>
       </div>
     </div>
@@ -35,11 +31,11 @@ const Search = () => {
       <div className="w-[520px] h-[460px] bg-white text-black rounded-3xl p-8 shadow-2xl hover:scale-105 transition-transform duration-300 ease-in-out flex flex-col justify-between">
         <div>
           <p className="uppercase text-sm font-medium tracking-wide text-black mb-2">
-            Your Gateway
+          Ask LegalAI
           </p>
-          <h3 className="text-2xl md:text-3xl font-semibold mb-4">Document Search</h3>
+          <h3 className="text-2xl md:text-3xl font-semibold mb-4">Smart Legal Document Search</h3>
           <p className="text-md md:text-lg mb-6 text-black">
-            Easily access and search your legal, academic, or project documents in one click.
+          The Document Search feature in LegalAI helps users quickly find the most relevant legal documents from a large collection.
           </p>
         </div>
 
