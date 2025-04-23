@@ -6,6 +6,8 @@ import {
   Delete_Pending_Req_By_ID,
   Delete_From_Admin_Table_By_ID,
   Delete_Pending_Req_By_ID1,
+  get_th1,
+  set_th1,
 } from "../Models/SuperAdminModel.js";
 
 export const adminRequest = async (req, res) => {
@@ -118,6 +120,61 @@ export const Delete_Req = async (req, res) => {
     console.log("Error in Deleting Request: ", error);
     return res.status(500).json({
       message: "Request Deletion Failed",
+      error: error.message || error,
+    });
+  }
+};
+
+// export const Set_Threshold = async (req, res) => {
+//   try {
+//     const { Threshhold_value, current_TH_id } = req.body;
+//     console.log(Threshhold_value, current_TH_id);
+//   } catch (error) {
+//     console.log("Error in Setting Threshold: ", error);
+//     return res.status(500).json({
+//       message: "Threshol setting failed...",
+//       error: error.message || error,
+//     });
+//   }
+// };
+
+export const Set_Threshold1 = async (req, res) => {
+  try {
+    const { threshold_id, threshold_value, super_admin_id } = req.body;
+    console.log(threshold_id, threshold_value, super_admin_id);
+
+    const th = await set_th1(threshold_value, super_admin_id);
+  } catch (error) {
+    console.log("Error in Setting Threshold: ", error);
+    return res.status(500).json({
+      success: false,
+      message: "Setting new threshold failed",
+      error: error.message || error,
+      data:{
+        
+      }
+    });
+  }
+};
+
+export const Fetch_Threshold1 = async (req, res) => {
+  try {
+    console.log("In get threshold controller");
+    const th = await get_th1();
+    console.log(th.id, th.threshold_value);
+
+    return res.status(200).json({
+      success: true,
+      message: "Threshold fetching Secessful...",
+      data: {
+        threshold_id: th.id,
+        threshold_value: th.threshold_value,
+      },
+    });
+  } catch (error) {
+    console.log("Error in Fetching Threshold: ", error);
+    return res.status(500).json({
+      message: "Threshol Fetching failed...",
       error: error.message || error,
     });
   }

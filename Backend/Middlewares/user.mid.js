@@ -1,9 +1,12 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 function userMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
+
+  // console.log("Hello World: "+req.cookies);
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ errors: "No token Provided" });

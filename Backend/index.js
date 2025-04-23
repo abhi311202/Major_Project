@@ -4,10 +4,12 @@ import cors from "cors";
 import userRoutes from "./Routes/userRoutes.js";
 import adminRoutes from "./Routes/adminRoutes.js";
 import superAdminRoutes from "./Routes/superAdminRoutes.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 dotenv.config();
 const port = process.env.PORT;
@@ -23,4 +25,3 @@ app.use("/SuperAdmin", superAdminRoutes);
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });
-

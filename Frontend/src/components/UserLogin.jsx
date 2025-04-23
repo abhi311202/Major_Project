@@ -1,13 +1,13 @@
-import React from 'react';
-import styled from 'styled-components';
-import Navbar from '../components/Navbar';
+import React from "react";
+import styled from "styled-components";
+import Navbar from "../components/Navbar";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from 'axios';
-import { useAuth } from "../context/AuthProvider"
+import axios from "axios";
+import { useAuth } from "../context/AuthProvider";
 
 const UserLogin = () => {
-    const [authUser, setAuthUser] = useAuth();
+  const [authUser, setAuthUser] = useAuth();
   const navigate = useNavigate();
   const handleClick = () => {
     navigate("/UserSignUp"); // opens the new page
@@ -18,39 +18,38 @@ const UserLogin = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  
+
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('http://localhost:4001/User/login', {
+      const response = await axios.post("http://localhost:4001/User/login", {
         username: data.username,
         password_hash: data.password_hash,
       });
-  
+
       // If login is successful, you get a token and user info in response.data
       if (response.status === 200) {
         // toast.success('Login successful!');
-        alert("Login sucessful")
+        alert("Login sucessful");
         setAuthUser(response.data.user);
-        navigate('/'); // ✅ Redirect to home/dashboard
+        navigate("/"); // ✅ Redirect to home/dashboard
       }
     } catch (error) {
-      console.error('Login error:', error);
-  
+      console.error("Login error:", error);
+
       if (error.response && error.response.status === 401) {
         // toast.error('Invalid credentials!');
-        alert('Invalid username or password.');
+        alert("Invalid username or password.");
       } else {
         // toast.error('Something went wrong during login');
-        alert('Something went wrong. Please try again later.');
+        alert("Something went wrong. Please try again later.");
       }
     }
   };
-  
 
   return (
     <Wrapper>
       <Navbar />
-      
+
       <form className="form" onSubmit={handleSubmit(onSubmit)}>
         <h2 className="title">User Login</h2>
 
@@ -58,32 +57,38 @@ const UserLogin = () => {
           <label>User Name</label>
           <div className="input-wrapper">
             <svg height={20} width={20} viewBox="0 0 32 32" fill="currentColor">
-              <path d="..."/>
+              <path d="..." />
             </svg>
-            <input type="text" placeholder="Enter your Email"
-            {...register("username", { required: true })} />
+            <input
+              type="text"
+              placeholder="Enter your Email"
+              {...register("username", { required: true })}
+            />
           </div>
         </div>
         {errors.username && (
-              <span className="p-2 text-sm text-red-500">
-                This field is required
-              </span>
+          <span className="p-2 text-sm text-red-500">
+            This field is required
+          </span>
         )}
 
         <div className="form-group">
           <label>Password</label>
           <div className="input-wrapper">
             <svg height={20} width={20} viewBox="0 0 32 32" fill="currentColor">
-              <path d="..."/>
+              <path d="..." />
             </svg>
-            <input type="password" placeholder="Enter your Password"
-            {...register("password_hash", { required: true })} />
+            <input
+              type="password"
+              placeholder="Enter your Password"
+              {...register("password_hash", { required: true })}
+            />
           </div>
         </div>
         {errors.password_hash && (
-              <span className="p-2 text-sm text-red-500">
-                This field is required
-              </span>
+          <span className="p-2 text-sm text-red-500">
+            This field is required
+          </span>
         )}
 
         {/* <div className="form-extra">
@@ -93,16 +98,23 @@ const UserLogin = () => {
           <span className="link">Forgot password?</span>
         </div> */}
 
-        <button type="submit" className="submit-btn">Log In</button>
+        <button type="submit" className="submit-btn">
+          Log In
+        </button>
 
         <p className="text-center">
-          Don't have an account? <span className="link" onClick={handleClick}>Sign Up</span>
+          Don't have an account?{" "}
+          <span className="link" onClick={handleClick}>
+            Sign Up
+          </span>
         </p>
 
         <div className="divider">or</div>
 
         <button className="google-btn">
-          <svg width={20} viewBox="0 0 512 512"><path d="..."/></svg>
+          <svg width={20} viewBox="0 0 512 512">
+            <path d="..." />
+          </svg>
           Continue with Google
         </button>
       </form>
@@ -125,7 +137,7 @@ const Wrapper = styled.div`
     border-radius: 16px;
     width: 100%;
     max-width: 420px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   }
 
   .title {
@@ -200,7 +212,7 @@ const Wrapper = styled.div`
     transition: background 0.2s ease;
 
     &:hover {
-      background:rgb(43, 42, 42);
+      background: rgb(43, 42, 42);
     }
   }
 

@@ -166,3 +166,43 @@ export const Delete_Pending_Req_By_ID1 = async (Pending_Request_id) => {
   console.log(result);
   return result.rowCount > 0 ? true : false;
 };
+
+// **********************
+
+export const get_th1 = async () => {
+  const query = `SELECT * FROM threshold_setting_1 WHERE is_delete = FALSE AND is_active = TRUE ORDER BY created_at ASC;`;
+  const result = await client.query(query);
+  console.log(result);
+
+  if (result.rowCount === 0) {
+    console.log(result);
+    throw new Error("No Active Threshold entry found!!!");
+  } else if (result.rowCount > 1) {
+    console.log(result);
+    throw new Error("Ambiguous Thresholds found!!!");
+  } else {
+    return result.rows[0];
+  }
+};
+
+export const set_th1 = async () => {
+  const query = ``;
+  const result = await client.query(query);
+
+  if (result) {
+    // return karo new entry ko
+  } else {
+    // error message retun karo purani entry ke sath
+    throw new Error("Setting new threshold failed");
+  }
+
+  if (result.rowCount === 0) {
+    console.log(result);
+    throw new Error("No Active Threshold entry found!!!");
+  } else if (result.rowCount > 1) {
+    console.log(result);
+    throw new Error("Ambiguous Thresholds found!!!");
+  } else {
+    return result.rows[0];
+  }
+};
