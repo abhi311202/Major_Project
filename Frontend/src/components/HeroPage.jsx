@@ -8,9 +8,11 @@ export const HeroPage = () => {
           Welcome to LegalAI
         </h1>
         <p className="text-lg text-gray-600 mb-8">
-          Empowering legal document analysis with AI-powered summarization and classification.
+        Transform legal workflows with AI-driven solutions that automate
+        the summarization and classification of legal documents,
+        enhancing accuracy and efficiency.
         </p>
-        <button className="bg-black text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300">
+        <button className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-700 transition duration-300">
           Get Started
         </button>
       </div>

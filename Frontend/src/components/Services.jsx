@@ -26,6 +26,24 @@ const services = [
     description:
       "Experience.",
   },
+  {
+    title: "Performance",
+    heading: "Engineered to Excel.",
+    description:
+      "Experience.",
+  },
+  {
+    title: "Performance",
+    heading: "Engineered to Excel.",
+    description:
+      "Experience.",
+  },
+  {
+    title: "Performance",
+    heading: "Engineered to Excel.",
+    description:
+      "Experience.",
+  },
 ];
 
 export const Services = () => {

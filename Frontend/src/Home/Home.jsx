@@ -18,6 +18,7 @@ import HorizontalScrollCarousel from "@/components/HorizontalScrollCarousel ";
 import ReadMore from "@/components/ReadMore";
 import Footer from "@/components/Footer";
 import { useLocation } from "react-router-dom";
+import  Search  from "@/components/Search";
 
 function Home() {
   const { section } = useParams();
@@ -52,11 +53,14 @@ function Home() {
     <div className="w-full overflow-x-hidden  ">
       <Navbar />
       <HeroPage />
+      <section id="search" className="w-full"></section>
+      <Search />
       <section id="services" className="w-full">
         <Services />
       </section>
       <section id="team" className="w-full"></section>
       <HorizontalScrollCarousel />
+      <section id="about" className="w-full"></section>
       <ReadMore />
       <Footer />
     </div>
