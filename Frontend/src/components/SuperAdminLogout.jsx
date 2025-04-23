@@ -12,13 +12,13 @@ function SuperAdminLogout() {
         user: null,
       });
       localStorage.removeItem("SuperAdmin");
-      alert("Super Admin logged out successfully");
+      toast.success("Logged out successfully");
 
       setTimeout(() => {
         window.location.reload();
       }, 1000);
       window.history.replaceState(null, "", "/Home2");
-      navigate("/", { replace: true });
+      // navigate("/", { replace: true });
     } catch (error) {
       toast.error("Error: " + error.message);
     }

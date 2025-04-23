@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from "react";
 import axios from "axios";
-
+import toast, { Toaster } from "react-hot-toast";
 
 const ManageAdmin = () => {
   const [admins, setAdmins] = useState([]);
@@ -35,12 +35,12 @@ const ManageAdmin = () => {
         Pending_Request_id: pendingId,
       });
   
-      alert(res.data.message);
+      toast.success(res.data.message);
       // Optionally refresh the list
       fetchAdmins(); 
     } catch (err) {
       console.error("Approval error:", err);
-      alert("Failed to approve request");
+      toast.error("Failed to approve request");
     }
   };
 
@@ -50,7 +50,7 @@ const ManageAdmin = () => {
         Pending_Request_id: pendingId,
       });
   
-      alert(res.data.message);
+      toast.success(res.data.message);
       // Refresh the admin list
       const refreshed = await axios.get("http://localhost:4001/SuperAdmin/AdminRequest");
       if (refreshed.data.success) {
@@ -58,7 +58,7 @@ const ManageAdmin = () => {
       }
     } catch (err) {
       console.error("Rejection error:", err);
-      alert("Failed to reject request");
+      toast.error("Failed to reject request");
     }
   };
   

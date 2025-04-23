@@ -15,7 +15,17 @@ const App = () => {
   return (
     <>
 
-    
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: "#fff",
+            color: "#000",
+            border: "1px solid #000",
+          },
+        }}
+      />
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Home2" element={<Home />} />

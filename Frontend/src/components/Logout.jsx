@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth1 } from "../context/AuthProvider1";
 import toast from "react-hot-toast";
 import { replace, useLocation, useNavigate } from "react-router-dom";
-
+import { Toaster } from "react-hot-toast";
 function Logout() {
   const [authUser, setAuthUser] = useAuth1();
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ function Logout() {
         user: null,
       });
       localStorage.removeItem("Admin");
-      alert("Logged out successfully");
+      toast.success("Logged out successfully");
     //   toast.success("Logged out successfully");
 
       setTimeout(() => {

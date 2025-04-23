@@ -4,7 +4,8 @@ import Navbar from '../components/Navbar';
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { useAuth2 } from "../context/AuthProvider2"
+import { useAuth2 } from "../context/AuthProvider2";
+import toast, { Toaster } from "react-hot-toast";
 
 const SuperAdminLogin = () => {
     const [authUser, setAuthUser] = useAuth2();
@@ -28,7 +29,7 @@ const SuperAdminLogin = () => {
       // If login is successful, you get a token and user info in response.data
       if (response.status === 200) {
         // toast.success('Login successful!');
-        alert("Login sucessfull")
+        toast.success("Login sucessfull")
         console.log(response);
         setAuthUser(response.data.SuperAdmin);
         navigate('/Home2'); // ✅ Redirect to home/dashboard
@@ -40,10 +41,10 @@ const SuperAdminLogin = () => {
   
       if (error.response && error.response.status === 401) {
         // toast.error('Invalid credentials!');
-        alert('Invalid username or password.');
+        toast.error('Invalid username or password.');
       } else {
         // toast.error('Something went wrong during login');
-        alert('Something went wrong. Please try again later.');
+        toast.error('Something went wrong. Please try again later.');
       }
     }
   };

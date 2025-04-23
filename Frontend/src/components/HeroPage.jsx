@@ -8,9 +8,7 @@ export const HeroPage = () => {
           Welcome to LegalAI
         </h1>
         <p className="text-lg text-gray-600 mb-8">
-        Transform legal workflows with AI-driven solutions that automate
-        the summarization and classification of legal documents,
-        enhancing accuracy and efficiency.
+        Transform legal workflows with AI-driven solutions that access the digital document repository, it also provides legal services that replaces the need for legal professional for simple legal tasks.
         </p>
         <button className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-700 transition duration-300">
           Get Started

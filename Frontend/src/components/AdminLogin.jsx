@@ -28,7 +28,7 @@ const UserLogin = () => {
       // If login is successful, you get a token and user info in response.data
       if (response.status === 200) {
         // toast.success('Login successful!');
-        alert("Login sucessfull")
+        toast.success("Login sucessfull")
         setAuthUser(response.data.Admin);
         navigate('/'); // ✅ Redirect to home/dashboard
         // console.log(response.data);
@@ -39,10 +39,10 @@ const UserLogin = () => {
   
       if (error.response && error.response.status === 401) {
         // toast.error('Invalid credentials!');
-        alert('Invalid username or password.');
+        toast.error('Invalid username or password.');
       } else {
         // toast.error('Something went wrong during login');
-        alert('Something went wrong. Please try again later.');
+        toast.error('Request has been to SuperAdmin.');
       }
     }
   };
