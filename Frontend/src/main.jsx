@@ -9,14 +9,14 @@ import AuthProvider2 from "./context/AuthProvider2.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-  <AuthProvider2>
-    <AuthProvider1>
-      <AuthProvider>
-        <div className="">
-          <App />
-        </div>
-      </AuthProvider>
-    </AuthProvider1>
+    <AuthProvider2>
+      <AuthProvider1>
+        <AuthProvider>
+          <div className="">
+            <App />
+          </div>
+        </AuthProvider>
+      </AuthProvider1>
     </AuthProvider2>
   </BrowserRouter>
 );

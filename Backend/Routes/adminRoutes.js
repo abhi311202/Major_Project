@@ -16,3 +16,5 @@ router.post("/logout", logout);
 // router.post("/verify", userMiddleware, demo);
 
 export default router;
+
+// Compare this snippet from Frontend/src/Home/MyProfileSection.jsx:

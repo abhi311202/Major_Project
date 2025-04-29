@@ -15,18 +15,23 @@ import {
 import { motion } from "framer-motion";
 
 export const AdminBody = () => {
-  
   const [selected, setSelected] = useState("Dashboard");
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
+    <div
+      className="flex h-screen bg-white overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(135deg, rgb(220, 155, 122), rgb(207, 225, 238), rgb(202, 169, 226))",
+      }}
+    >
       <Sidebar selected={selected} setSelected={setSelected} />
-      
+
       {/* Right Side Content */}
       <div className="flex-1 overflow-auto p-6">
         {selected === "Dashboard" ? (
           <MyProfileSection />
-        ): selected === "UploadNewDocument" ? (
+        ) : selected === "UploadNewDocument" ? (
           <UploadNewDocument />
         ) : (
           <ExampleContent selected={selected} />
@@ -36,10 +41,8 @@ export const AdminBody = () => {
   );
 };
 
-
 const Sidebar = ({ selected, setSelected }) => {
   const [open, setOpen] = useState(true);
-  
 
   useEffect(() => {
     console.log(selected);
@@ -50,7 +53,7 @@ const Sidebar = ({ selected, setSelected }) => {
       layout
       className="sticky top-0 h-screen shrink-0 border-r border-slate-300 bg-white p-2"
       style={{
-        width: open ? "300px" : "fit-content",
+        width: open ? "250px" : "fit-content",
       }}
     >
       {/* <TitleSection open={open} /> */}
@@ -64,14 +67,13 @@ const Sidebar = ({ selected, setSelected }) => {
           open={open}
         />
         <Option
-          Icon={FiUpload }
-          title="UploadNewDocument"
+          Icon={FiUpload}
+          title="Upload New Document"
           selected={selected}
           setSelected={setSelected}
           open={open}
           notifs={3}
         />
-        
       </div>
 
       <ToggleClose open={open} setOpen={setOpen} />
@@ -107,8 +109,6 @@ const Option = ({ Icon, title, selected, setSelected, open, notifs }) => {
           {title}
         </motion.span>
       )}
-
-      
     </motion.button>
   );
 };
@@ -197,8 +197,10 @@ const ToggleClose = ({ open, setOpen }) => {
   );
 };
 
-const ExampleContent = () => <div className="h-[200vh] w-full ">
-  <h1 className="text-white">hello</h1>
-</div>;
+const ExampleContent = () => (
+  <div className="h-[200vh] w-full ">
+    <h1 className="text-white">hello</h1>
+  </div>
+);
 
 export default AdminBody;

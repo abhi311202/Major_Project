@@ -598,47 +598,44 @@ function UploadNewDocument() {
             </span>
           )}
 
-<div className="mb-6">
-  <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">
-    Key Entities
-  </h2>
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">
+              Key Entities
+            </h2>
 
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-black border border-gray-300 dark:border-gray-600 rounded-xl p-6 shadow">
-
-    {/* Field Generator */}
-    {[
-      "Case No",
-      "Case Type",
-      "Case Status",
-      "Filing Date",
-      "Judgement Date",
-      "Court No",
-      "Court Name",
-      "Bench",
-      "Petitioner",
-      "Respondent",
-      "Advantage of Petitioner",
-      "Advantage of Respondent",
-      "Previous case citation",
-      "Penalty Detail",
-      "Head Note"
-    ].map((label, index) => (
-      <div key={index} className="flex flex-col">
-        <label className="text-gray-600 dark:text-white font-medium mb-1">
-          {label}:
-        </label>
-        <input
-          type="text"
-          className="p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-black text-gray-800 dark:text-white shadow-sm"
-          placeholder={`Enter ${label.toLowerCase()}`}
-          // You can add value, onChange, or register here
-        />
-      </div>
-    ))}
-
-  </div>
-</div>
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-black border border-gray-300 dark:border-gray-600 rounded-xl p-6 shadow">
+              {/* Field Generator */}
+              {[
+                "Case No",
+                "Case Type",
+                "Case Status",
+                "Filing Date",
+                "Judgement Date",
+                "Court No",
+                "Court Name",
+                "Bench",
+                "Petitioner",
+                "Respondent",
+                "Advantage of Petitioner",
+                "Advantage of Respondent",
+                "Previous case citation",
+                "Penalty Detail",
+                "Head Note",
+              ].map((label, index) => (
+                <div key={index} className="flex flex-col">
+                  <label className="text-gray-600 dark:text-white font-medium mb-1">
+                    {label}:
+                  </label>
+                  <input
+                    type="text"
+                    className="p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-black text-gray-800 dark:text-white shadow-sm"
+                    placeholder={`Enter ${label.toLowerCase()}`}
+                    // You can add value, onChange, or register here
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
 
           <label className="block text-gray-600 font-medium dark:text-white">
             Summary:
@@ -681,8 +678,6 @@ function UploadNewDocument() {
               This field is required
             </span>
           )}
-
-         
 
           <label className="block text-gray-600 font-medium dark:text-white">
             Classification Reason:

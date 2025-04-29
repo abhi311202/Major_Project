@@ -1,57 +1,57 @@
-import React from 'react';
-import styled from 'styled-components';
-import Navbar from '../components/Navbar';
+import React, { useState } from "react";
+import styled from "styled-components";
+import Navbar from "../components/Navbar";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
-import axios from 'axios';
-import { useAuth2 } from "../context/AuthProvider2"
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth2 } from "../context/AuthProvider2";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing Font Awesome icons for eye toggle
 
 const SuperAdminLogin = () => {
-    const [authUser, setAuthUser] = useAuth2();
+  const [authUser, setAuthUser] = useAuth2();
+  const [passwordVisible, setPasswordVisible] = useState(false); // State for password visibility
   const navigate = useNavigate();
-//   const handleClick = () => {
-//     navigate("/SuperAdminSignUp"); // opens the new page
-//   };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('http://localhost:4001/SuperAdmin/login', {
-        username: data.username,
-        password_hash: data.password_hash,
-      });
-  
-      // If login is successful, you get a token and user info in response.data
+      const response = await axios.post(
+        "http://localhost:4001/SuperAdmin/login",
+        {
+          username: data.username,
+          password_hash: data.password_hash,
+        }
+      );
+
       if (response.status === 200) {
-        // toast.success('Login successful!');
-        alert("Login sucessfull")
-        console.log(response);
+        alert("Login successful");
         setAuthUser(response.data.SuperAdmin);
-        navigate('/Home2'); // ✅ Redirect to home/dashboard
-        localStorage.setItem("SuperAdmin", JSON.stringify(response.data.SuperAdmin));
-        // console.log(response);
+        navigate("/Home2");
+        localStorage.setItem(
+          "SuperAdmin",
+          JSON.stringify(response.data.SuperAdmin)
+        );
       }
     } catch (error) {
-      console.error('Login error:', error);
-  
+      console.error("Login error:", error);
       if (error.response && error.response.status === 401) {
-        // toast.error('Invalid credentials!');
-        alert('Invalid username or password.');
+        alert("Invalid username or password.");
       } else {
-        // toast.error('Something went wrong during login');
-        alert('Something went wrong. Please try again later.');
+        alert("Something went wrong. Please try again later.");
       }
     }
   };
-  
 
   return (
     <Wrapper>
-      <Navbar />
+      <div className="navbar-wrapper">
+        <Navbar />
+      </div>
       <form className="form" onSubmit={handleSubmit(onSubmit)}>
         <h2 className="title">Super Admin Login</h2>
 
@@ -59,49 +59,62 @@ const SuperAdminLogin = () => {
           <label>User Name</label>
           <div className="input-wrapper">
             <svg height={20} width={20} viewBox="0 0 32 32" fill="currentColor">
-              <path d="..."/>
+              <path d="..." />
             </svg>
-            <input type="text" placeholder="Enter your Email"
-            {...register("username", { required: true })} />
+            <input
+              type="text"
+              placeholder="Enter your Email"
+              {...register("username", { required: true })}
+            />
           </div>
         </div>
         {errors.username && (
-              <span className="p-2 text-sm text-red-500">
-                This field is required
-              </span>
+          <span className="p-2 text-sm text-red-500">
+            This field is required
+          </span>
         )}
 
         <div className="form-group">
           <label>Password</label>
           <div className="input-wrapper">
             <svg height={20} width={20} viewBox="0 0 32 32" fill="currentColor">
-              <path d="..."/>
+              <path d="..." />
             </svg>
-            <input type="password" placeholder="Enter your Password"
-            {...register("password_hash", { required: true })} />
+            <input
+              type={passwordVisible ? "text" : "password"} // Toggle password visibility
+              placeholder="Enter your Password"
+              {...register("password_hash", { required: true })}
+            />
+            <span
+              className="eye-icon"
+              onClick={() => setPasswordVisible(!passwordVisible)} // Toggle visibility on click
+            >
+              {passwordVisible ? (
+                <FaEyeSlash /> // Eye Slash when password is visible
+              ) : (
+                <FaEye /> // Eye when password is hidden
+              )}
+            </span>
           </div>
         </div>
         {errors.password_hash && (
-              <span className="p-2 text-sm text-red-500">
-                This field is required
-              </span>
+          <span className="p-2 text-sm text-red-500">
+            This field is required
+          </span>
         )}
 
-        {/* <div className="form-extra">
-          <label>
-            <input type="checkbox" /> Remember me
-          </label>
-          <span className="link">Forgot password?</span>
-        </div> */}
-
-        <button type="submit" className="submit-btn">Log In</button>
-
-        
+        <button type="submit" className="submit-btn">
+          Log In
+        </button>
 
         <div className="divider"></div>
 
         <button className="google-btn">
-          <svg width={20} viewBox="0 0 512 512"><path d="..."/></svg>
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjzC2JyZDZ_RaWf0qp11K0lcvB6b6kYNMoqtZAQ9hiPZ4cTIOB"
+            alt="Google icon"
+            height="18"
+          />
           Continue with Google
         </button>
       </form>
@@ -111,11 +124,23 @@ const SuperAdminLogin = () => {
 
 const Wrapper = styled.div`
   min-height: 100vh;
-  background: #f9fafb;
+  background: linear-gradient(
+    135deg,
+    rgb(222, 195, 181),
+    rgb(207, 225, 238),
+    rgb(202, 169, 226)
+  );
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow-y: scroll;
+
+  .navbar-wrapper {
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
 
   .form {
     margin-top: 50px;
@@ -124,13 +149,14 @@ const Wrapper = styled.div`
     border-radius: 16px;
     width: 100%;
     max-width: 420px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   }
 
   .title {
     text-align: center;
     margin-bottom: 25px;
-    font-size: 1.8rem;
+    font-size: 2rem;
+    font-weight: 800;
     color: #222;
   }
 
@@ -147,11 +173,12 @@ const Wrapper = styled.div`
     .input-wrapper {
       display: flex;
       align-items: center;
-      border: 1px solid #dcdfe4;
+      border: 2px solid #e0e0e0;
       border-radius: 10px;
       padding: 10px;
       background: #fafafa;
-      transition: border 0.2s ease;
+      transition: all 0.3s ease;
+      position: relative;
 
       svg {
         margin-right: 10px;
@@ -167,22 +194,18 @@ const Wrapper = styled.div`
         outline: none;
       }
 
-      &:focus-within {
-        border-color: #2d79f3;
+      &:hover {
+        border-image: linear-gradient(45deg, #6a11cb, #2575fc) 1;
+        border-width: 2px;
+        border-style: solid;
       }
-    }
-  }
 
-  .form-extra {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9rem;
-    margin-bottom: 20px;
-
-    .link {
-      color: #2d79f3;
-      cursor: pointer;
+      .eye-icon {
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
+        color: #888;
+      }
     }
   }
 
@@ -196,22 +219,12 @@ const Wrapper = styled.div`
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.3s ease;
 
     &:hover {
-      background:rgb(43, 42, 42);
-    }
-  }
-
-  .text-center {
-    text-align: center;
-    font-size: 0.9rem;
-    margin: 15px 0;
-
-    .link {
-      color: #2d79f3;
-      font-weight: 500;
-      cursor: pointer;
+      transform: scale(1.03);
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
     }
   }
 
@@ -247,19 +260,22 @@ const Wrapper = styled.div`
     justify-content: center;
     gap: 10px;
     background: white;
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
     padding: 12px;
     width: 100%;
     border-radius: 10px;
     cursor: pointer;
     font-weight: 500;
+    transition: border 0.3s ease;
 
-    &:hover {
-      border-color: #2d79f3;
+    img {
+      height: 18px;
     }
 
-    svg {
-      fill: #2d79f3;
+    &:hover {
+      border-image: linear-gradient(45deg, #6a11cb, #2575fc) 1;
+      border-width: 2px;
+      border-style: solid;
     }
   }
 `;

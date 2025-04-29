@@ -18,7 +18,7 @@ import HorizontalScrollCarousel from "@/components/HorizontalScrollCarousel ";
 import ReadMore from "@/components/ReadMore";
 import Footer from "@/components/Footer";
 import { useLocation } from "react-router-dom";
-import  Search  from "@/components/Search";
+import Search from "@/components/Search";
 
 function Home() {
   const { section } = useParams();

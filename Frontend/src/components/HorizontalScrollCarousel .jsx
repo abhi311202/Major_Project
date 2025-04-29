@@ -2,7 +2,7 @@ import React from "react";
 
 const TeamSection = () => {
   return (
-    <div className="bg-gray-300 py-16 px-6 md:px-12">
+    <div className="bg-gradient-to-r from-violet-300 via-green-200 indigo to-red-300 py-16 px-6 md:px-12">
       <h2 className="text-4xl font-bold text-center text-gray-800 mb-10">
         Meet Our Team
       </h2>
@@ -14,24 +14,26 @@ const TeamSection = () => {
           msOverflowStyle: "none", // IE/Edge
         }}
         onWheel={(e) => {
-          e.currentTarget.scrollLeft += e.deltaY; // smooth horizontal scroll on mouse wheel
+          e.currentTarget.scrollLeft += e.deltaY;
         }}
       >
         {teamMembers.map((member) => (
           <div
             key={member.id}
-            className="min-w-[340px] max-w-[340px] flex-shrink-0 bg-white rounded-3xl shadow-xl overflow-hidden transform hover:scale-105 transition duration-300"
+            className="min-w-[300px] max-w-[400px] flex-shrink-0 rounded-3xl bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300 p-1 transition-transform hover:scale-105"
           >
-            <img
-              src={member.url}
-              alt={member.title}
-              className="w-full h-[340px] object-cover"
-            />
-            <div className="p-5 text-center">
-              <h3 className="text-2xl font-semibold text-gray-800">
-                {member.title}
-              </h3>
-              <p className="text-sm text-gray-500">{member.role}</p>
+            <div className="bg-white rounded-3xl overflow-hidden">
+              <img
+                src={member.url}
+                alt={member.title}
+                className="w-full h-[300px] object-cover transition duration-300 hover:border-4"
+              />
+              <div className="p-5 text-center">
+                <h3 className="text-2xl font-semibold text-gray-800">
+                  {member.title}
+                </h3>
+                <p className="text-sm text-gray-500">{member.role}</p>
+              </div>
             </div>
           </div>
         ))}

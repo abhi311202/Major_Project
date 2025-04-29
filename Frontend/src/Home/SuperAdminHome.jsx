@@ -1,13 +1,13 @@
-import React from 'react'
+import React from "react";
 import Navbar from "@/components/Navbar";
 import SuperAdminBody from "./SuperAdminBody";
 function SuperAdminHome() {
   return (
     <>
-    <Navbar />
-    <SuperAdminBody />
+      <Navbar />
+      <SuperAdminBody />
     </>
-  )
+  );
 }
 
-export default SuperAdminHome
+export default SuperAdminHome;

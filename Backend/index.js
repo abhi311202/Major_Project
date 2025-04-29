@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import mongoose from "mongoose";
 import userRoutes from "./Routes/userRoutes.js";
 import adminRoutes from "./Routes/adminRoutes.js";
 import superAdminRoutes from "./Routes/superAdminRoutes.js";
@@ -23,4 +24,13 @@ app.use("/SuperAdmin", superAdminRoutes);
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });
-
+// DB Connection
+mongoose.connect(process.env.MONGO_URI, {
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true
+})
+.then(() => {
+  console.log('Connected to MongoDB');
+  // app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+})
+.catch(err => console.error(err));
