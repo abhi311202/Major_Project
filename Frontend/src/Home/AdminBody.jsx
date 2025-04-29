@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MyProfileSection from "./MyProfileSection";
 import UploadNewDocument from "../Admin/UploadNewDocument";
+import UploadedDocument from "../Admin/UploadedDocument";
 import {
   FiBarChart,
   FiChevronDown,
@@ -28,6 +29,8 @@ export const AdminBody = () => {
           <MyProfileSection />
         ): selected === "UploadNewDocument" ? (
           <UploadNewDocument />
+        ): selected === "UploadedDocument" ? (
+          <UploadedDocument />
         ) : (
           <ExampleContent selected={selected} />
         )}
@@ -66,6 +69,15 @@ const Sidebar = ({ selected, setSelected }) => {
         <Option
           Icon={FiUpload }
           title="UploadNewDocument"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          notifs={3}
+        />
+
+        <Option
+          Icon={FiUpload }
+          title="UploadedDocument"
           selected={selected}
           setSelected={setSelected}
           open={open}

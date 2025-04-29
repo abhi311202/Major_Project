@@ -169,6 +169,31 @@ export const Delete_Pending_Req_By_ID1 = async (Pending_Request_id) => {
 
 // **********************
 
+export const set_th1 = async (threshold_value, super_admin_id) => {
+  try {
+    const query = `INSERT INTO threshold_setting_1 (
+      super_admin_id,
+      threshold_value,
+      is_active,
+      is_delete,
+      created_at,
+      modified_at,
+      deleted_at
+    ) VALUES ($1, $2, TRUE, FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL) RETURNING id`;
+    const result = await client.query(query, [super_admin_id, threshold_value]);
+
+    if (result.rowCount > 0) {
+      return result.rows[0].id; // Return the inserted row's ID
+    } else {
+      console.log(result);
+      // throw new Error("Error in making new entry...");
+      return false;
+    }
+  } catch (error) {
+    throw new Error("Error in making new entry");
+  }
+};
+
 export const get_th1 = async () => {
   const query = `SELECT * FROM threshold_setting_1 WHERE is_delete = FALSE AND is_active = TRUE ORDER BY created_at ASC;`;
   const result = await client.query(query);
@@ -185,24 +210,26 @@ export const get_th1 = async () => {
   }
 };
 
-export const set_th1 = async () => {
-  const query = ``;
-  const result = await client.query(query);
 
-  if (result) {
-    // return karo new entry ko
-  } else {
-    // error message retun karo purani entry ke sath
-    throw new Error("Setting new threshold failed");
-  }
 
-  if (result.rowCount === 0) {
+export const del_th1 = async (threshold_id) => {
+  try {
+    const query = `UPDATE threshold_setting_1
+SET
+    is_active = FALSE,
+    is_delete = TRUE,
+    modified_at = CURRENT_TIMESTAMP,
+    deleted_at = CURRENT_TIMESTAMP
+WHERE id = $1;`;
+
+    const result = await client.query(query, [threshold_id]);
     console.log(result);
-    throw new Error("No Active Threshold entry found!!!");
-  } else if (result.rowCount > 1) {
-    console.log(result);
-    throw new Error("Ambiguous Thresholds found!!!");
-  } else {
-    return result.rows[0];
-  }
+    if (result.rowCount > 0) {
+      return true; // Deletion successful
+    } else {
+      return false; // No row found with the given id
+    }
+  } catch (error) {
+    throw new Error("Error in deleting the past entry");
+  }
 };
