@@ -7,12 +7,15 @@ import {
   registerAdmin,
   adminLogin,
   logout,
-  //   demo,
+  uploadDocs,
+  getDocs,
 } from "../Controllers/adminController.js";
 
 router.post("/register", registerAdmin);
 router.post("/login", adminLogin);
 router.post("/logout", logout);
+router.post("/adminDocuments", uploadDocs);
+router.post("/adminDocumentsUploaded", getDocs);
 // router.post("/verify", userMiddleware, demo);
 
 export default router;
