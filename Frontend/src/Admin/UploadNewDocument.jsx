@@ -5,6 +5,9 @@ import axios from "axios";
 import pdfToText from "react-pdftotext"; // Import react-pdftotext
 import mammoth from "mammoth";
 import { FiUpload, FiLoader } from "react-icons/fi";
+import { toast } from "react-hot-toast";
+
+
 
 // import toast from "react-hot-toast";
 // import "../App.css";
@@ -18,6 +21,8 @@ GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 function UploadNewDocument() {
+  const [selectedFileName, setSelectedFileName] = useState('');
+
   const editor = useRef(null);
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
@@ -26,10 +31,13 @@ function UploadNewDocument() {
   const [Class, SetClass] = useState("");
   const [Other, setOther] = useState(null);
   const [loading1, setLoading1] = useState(false); // Add loading state
+  const [loading2, setLoading2] = useState(false); // Add loading state
   const [summarizationError, setSummarizationError] = useState(null);
   const [classificationError, setClassificationError] = useState(null);
+  const [entitymetaError, setEntitymetaError] = useState(null);
 
   const [classification, setClassification] = useState("");
+  const [entitymeta, setEntitymeta] = useState("");
   const [caseno, setCaseno] = useState("");
   const [casetype, setCasetype] = useState("");
   const [filingdate, setFilingdate] = useState("");
@@ -211,6 +219,8 @@ function UploadNewDocument() {
     };
   };
 
+
+
   // Stimulate classification process
   const handleClassify = async () => {
     console.log("Quick Classify");
@@ -294,6 +304,82 @@ function UploadNewDocument() {
     }
   };
 
+  const handleEntitymeta = async () => {
+    console.log("Meta and Entity extraction");
+    setLoading2(true);
+    setEntitymetaError(null); // Reset error state before starting
+    setEntitymeta(""); // Clear previous summary
+
+    let pages = [];
+    if (!file) {
+      setEntitymetaError("No file selected.");
+      setLoading2(false);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+
+    reader.onload = async function () {
+      try {
+        const pdfData = new Uint8Array(reader.result);
+        const pdf = await getDocument({
+          data: pdfData,
+          standardFontDataUrl: "node_modules/pdfjs-dist/standard_fonts/",
+        }).promise;
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const text = textContent.items.map((item) => item.str).join(" ");
+
+          pages.push({
+            page_number: i,
+            page_char_count: text.length,
+            page_token_count: text.length / 4,
+            page_word_count: text.split(" ").length,
+            page_sentence_count_raw: text.split(".").length,
+            text: cleanString(text),
+          });
+        }
+
+        const jsonData = {
+          doc_id: 12345,
+          doc_name: file.name,
+          metadata: {},
+          pages: pages,
+        };
+
+        await axios
+          .post("http://52.66.174.249:7000/apirequired", jsonData)
+          .then((res) => {
+            console.log(JSON.stringify(res.data));
+            reset({ entitymeta: res.data.entitymetapipeline });
+            setSummary(markdownToPlainText(res.data.entitymetapipeline));
+          })
+          .catch((err) => {
+            console.error(err);
+            setEntitymetaError("Failed to fetch summary."); // Show error message in UI
+          })
+          .finally(() => {
+            setLoading(false); // Stop loading after request completes
+          });
+      } catch (error) {
+        console.error("Error processing file:", error);
+        setEntitymetaError(
+          "An error occurred while processing the document."
+        );
+        setLoading2(false);
+      }
+    };
+
+    reader.onerror = () => {
+      console.error("Error reading the file.");
+      setEntitymetaError("Failed to read the file.");
+      setLoading2(false);
+    };
+  };
+
   let fileK, url;
   const Helper = async (title) => {
     try {
@@ -370,7 +456,7 @@ function UploadNewDocument() {
         setClassError("");
       }, 10000);
 
-      return alert("Invalid case type!");
+      return toast.error("Invalid case type!");
     }
 
     const documentInfo = {
@@ -435,7 +521,7 @@ function UploadNewDocument() {
         if (res.data) {
           // console.log(res.data);
           // Remove "Please wait..." toast
-          alert(res.data.message);
+          toast.success(res.data.message);
           handleResetButton();
           handleResetButton();
           // **Force re-render of file input field**
@@ -446,7 +532,7 @@ function UploadNewDocument() {
         if (err.response) {
           console.log(err);
           console.log("Error from backend: " + err.response.data.message);
-          alert("Error: " + err.response.data.message);
+          toast.error("Error: " + err.response.data.message);
         }
       });
   };
@@ -514,6 +600,27 @@ function UploadNewDocument() {
       // }, 1000);
     }
   };
+  const handleClear = () => {
+    setCaseno("");
+    setCasetype("");
+    setCasestatus("");
+    setFilingdate("");
+    setJudgmentdate("");
+    setCourtno("");
+    setCourtname("");
+    setBench("");
+    setPetitioner("");
+    setRespondent("");
+    setAdvofpetitioner("");
+    setAdvofrespondent("");
+    setPrevcasecitation("");
+    setPenaltydetail("");
+    setHeadnote("");
+  
+    // Optional: if you're using useForm() from react-hook-form
+    // reset();
+  };
+  
 
   const handleFileClick = () => {
     if (file) {
@@ -554,6 +661,8 @@ function UploadNewDocument() {
     const file = e.target.files[0];
     if (file) {
       setLoading(true);
+      setSelectedFileName(file.name);
+
   
       const reader = new FileReader();
       reader.onload = () => {
@@ -576,30 +685,41 @@ function UploadNewDocument() {
   
       reader.readAsText(file);
     }
+    else {
+      setSelectedFileName('');
+    }
   };
   
   
 
   return (
-    <div className="flex min-h-screen max-h-max overflow-hidden">
+<div className="flex min-h-screen max-h-max overflow-hidden ">
   <div className="flex flex-col items-center justify-start w-full p-4">
     
     {/* File Chooser Always on Top */}
     <div className="w-full ml-[950px]">
-      <input
-        type="file"
-        accept=".txt,.pdf,.docx"
-        onChange={handleFileChange}
-        className="block w-full text-sm text-gray-700
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-md file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-black file:text-white
-                  hover:file:bg-gray-700
-                  transition-all duration-300
-                  file:cursor-pointer"
-      />
-    </div>
+  <label
+    htmlFor="file-upload"
+    className={`inline-block cursor-pointer text-white text-base font-semibold py-3 px-6 rounded-md transition-all duration-300
+      ${isInScope ? 'bg-gray-400 cursor-not-allowed' : 'bg-black hover:bg-gray-700'}`}
+  >
+    Browse File
+  </label>
+  <input
+    id="file-upload"
+    type="file"
+    accept=".txt,.pdf,.docx"
+    onChange={handleFileChange}
+    disabled={isInScope}
+    className="hidden"
+  />
+  {selectedFileName && (
+    <p className="mt-2 text-sm text-gray-700">{selectedFileName}</p>
+  )}
+</div>
+
+
+
     <br></br>
 
 
@@ -900,6 +1020,22 @@ function UploadNewDocument() {
     />
   </div>
 </div>
+<div className="mt-6 flex flex-wrap gap-4">
+  <button
+    onClick={handleShowResult}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+  >
+    Show Result
+  </button>
+
+  <button
+    onClick={handleClear}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+  >
+    Clear
+  </button>
+</div>
+
 </div>
 
 
@@ -1021,9 +1157,24 @@ function UploadNewDocument() {
 
  
 </div>
+<div className="mt-6 flex flex-wrap gap-4">
+  <button
+    onClick={handleShowResult}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+  >
+    Show Result
+  </button>
+
+  <button
+    onClick={handleClear}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+  >
+    Clear
+  </button>
+</div>
 </div>
 {/* class */}
-
+<div className="border rounded-lg p-6 shadow-md bg-white dark:bg-gray-900">
 <label className="block text-gray-600 font-medium dark:text-white">
             Classification:
             <div className="relative w-full">
@@ -1071,8 +1222,63 @@ function UploadNewDocument() {
             </div>
           </label>
 
+           {/* Classification Reason */}
+           <div>
+            <label className="block text-gray-600 dark:text-white font-medium mb-1">
+              Classification Reason:
+            </label>
+            <div className="relative">
+              <textarea
+                rows="8"
+                defaultValue={classificationReason}
+                onChange={(e) => {
+                  setClassificationReason(e.target.value);
+                  setValue("ClassificationReason", e.target.value);
+                }}
+                {...(loading1 ? {} : register("classificationReason", { required: true }))}
+                className={`w-full p-3 border rounded-md resize-none dark:bg-black dark:border-gray-600 dark:text-white ${
+                  classificationError ? "border-red-500" : ""
+                }`}
+              />
+              {loading1 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-black/80">
+                  <span className="text-2xl font-bold text-gray-600 dark:text-gray-300 animate-pulse">
+                    Processing...
+                  </span>
+                </div>
+              )}
+              {!loading1 && classificationError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-red-100 dark:bg-red-900 border border-red-500 rounded-lg">
+                  <span className="text-red-700 dark:text-red-300 font-semibold">
+                    {classificationError}
+                  </span>
+                </div>
+              )}
+            </div>
+            {errors.ClassificationReason && (
+              <span className="text-sm text-red-500">This field is required</span>
+            )}
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-4">
+  <button
+    onClick={handleShowResult}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+  >
+    Show Result
+  </button>
+
+  <button
+    onClick={handleClear}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+  >
+    Clear
+  </button>
+</div>
+</div>
 
           {/* Summary */}
+          <div className="border rounded-lg p-6 shadow-md bg-white dark:bg-gray-900">
           <div>
             <label className="block text-gray-600 dark:text-white font-medium mb-1">
               Summary:
@@ -1109,44 +1315,24 @@ function UploadNewDocument() {
               <span className="text-sm text-red-500">This field is required</span>
             )}
           </div>
+          <div className="mt-6 flex flex-wrap gap-4">
+  <button
+    onClick={handleShowResult}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+  >
+    Show Result
+  </button>
 
-          {/* Classification Reason */}
-          <div>
-            <label className="block text-gray-600 dark:text-white font-medium mb-1">
-              Classification Reason:
-            </label>
-            <div className="relative">
-              <textarea
-                rows="8"
-                defaultValue={classificationReason}
-                onChange={(e) => {
-                  setClassificationReason(e.target.value);
-                  setValue("ClassificationReason", e.target.value);
-                }}
-                {...(loading1 ? {} : register("classificationReason", { required: true }))}
-                className={`w-full p-3 border rounded-md resize-none dark:bg-black dark:border-gray-600 dark:text-white ${
-                  classificationError ? "border-red-500" : ""
-                }`}
-              />
-              {loading1 && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-black/80">
-                  <span className="text-2xl font-bold text-gray-600 dark:text-gray-300 animate-pulse">
-                    Processing...
-                  </span>
-                </div>
-              )}
-              {!loading1 && classificationError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-red-100 dark:bg-red-900 border border-red-500 rounded-lg">
-                  <span className="text-red-700 dark:text-red-300 font-semibold">
-                    {classificationError}
-                  </span>
-                </div>
-              )}
-            </div>
-            {errors.ClassificationReason && (
-              <span className="text-sm text-red-500">This field is required</span>
-            )}
+  <button
+    onClick={handleClear}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+  >
+    Clear
+  </button>
+</div>
           </div>
+
+         
 
                     {/* Content */}
                     <div>

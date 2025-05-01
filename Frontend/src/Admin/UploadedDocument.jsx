@@ -534,7 +534,7 @@ function UploadedDocument() {
 
   return (
     <>
-       <div className="flex min-h-screen max-h-max bg-white dark:bg-[#222]">
+       <div className="flex min-h-screen max-h-max dark:bg-[#222]">
   <div className="flex-1 p-4 sm:p-6">
     <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-white mb-4 sm:mb-6">
       Documents Uploaded

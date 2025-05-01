@@ -27,7 +27,7 @@ function SuperAdminLogout() {
   return (
     <div>
       <button
-        className="bg-black border border-black-700 text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2 rounded-md hover:bg-black-600 duration-300 cursor-pointer"
+        className="bg-black border border-black-700 text-white text-xs sm:text-sm px-2 py-1 sm:px-2 sm:py-[5px] rounded-md hover:bg-black-600 duration-300 cursor-pointer"
         onClick={handleLogout}
       >
         Logout
