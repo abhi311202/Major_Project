@@ -10,9 +10,12 @@ import {
   //   demo,
 } from "../Controllers/adminController.js";
 
+import { DocUpload } from "../Controllers/DocumentController.js";
+
 router.post("/register", registerAdmin);
 router.post("/login", adminLogin);
 router.post("/logout", logout);
+router.post("/UploadDocument", DocUpload);
 // router.post("/verify", userMiddleware, demo);
 
 export default router;

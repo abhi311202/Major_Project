@@ -5,6 +5,7 @@ import userRoutes from "./Routes/userRoutes.js";
 import adminRoutes from "./Routes/adminRoutes.js";
 import superAdminRoutes from "./Routes/superAdminRoutes.js";
 import cookieParser from "cookie-parser";
+import connectMongo from "./config/mongoClient.js";
 
 const app = express();
 app.use(cors());
@@ -13,6 +14,8 @@ app.use(cookieParser());
 
 dotenv.config();
 const port = process.env.PORT;
+
+connectMongo();
 
 app.get("/", (req, res) => {
   res.send("Hello Abi!");
