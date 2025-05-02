@@ -6,6 +6,10 @@ import {
   loginAdmin,
 } from "../Models/AdminModel.js";
 
+
+import Admin from "../Models/AdminModel.js";
+import Document from "../Models/documnetModel.js";
+
 export const registerAdmin = async (req, res) => {
   console.log(req.body);
   try {
@@ -96,4 +100,116 @@ export const logout = async (req, res) => {
     }
   };
 
+  export const uploadDocs = async (req, res) => {
+    try {
+      const {
+        title,
+        serialnum,
+        content,
+        summary,
+        Class,
+        ClassificationReason,
+        adminid,
+        uploadDate,
+        caseno,
+        casetype,
+        casestatus,
+        judgmentdate,
+        filingdate,
+        courtno,
+        courtname,
+        bench,
+        petitioner,
+        respondent,
+        advofpetitioner,
+        advofrespondent,
+        prevcasecitation,
+        penaltydetail,
+        headnote,
+        judgementauthor,
+        judgementtype,
+        langofjudgement,
+        dateofhearing,
+        dateoforderpro,
+        benchcomposition,
+        referredacts
+      } = req.body;
+      const admin = await Document.findOne({ title });
+      const admin1 = await Document.findOne({ serialnum });
+      if (admin) {
+        return res
+          .status(400)
+          .json({ message: "Document with the same title already exists." });
+      } else if (admin1) {
+        return res
+          .status(400)
+          .json({
+            message: "Document with the same serial number already exists.",
+          });
+      }
+  
+      const createdDocument = new Document({
+        title: title,
+        serialnum: serialnum,
+        content: content,
+        summary: summary,
+        Class: Class,
+        ClassificationReason: ClassificationReason,
+        adminid: adminid,
+        uploadDate: uploadDate,
+        caseno: caseno,
+        casetype: casetype,
+        casestatus: casestatus,
+        filingdate: filingdate,
+        judgmentdate: judgmentdate,
+        courtno: courtno,
+        courtname: courtname,
+        bench: bench,
+        petitioner: petitioner,
+        respondent: respondent,
+        advofpetitioner: advofpetitioner,
+        advofrespondent: advofrespondent,
+        prevcasecitation: prevcasecitation,
+        penaltydetail: penaltydetail,
+        headnote: headnote,
+        judgementauthor: judgementauthor,
+        judgementtype: judgementtype,
+        langofjudgement: langofjudgement,
+        dateofhearing: dateofhearing,
+        dateoforderpro: dateoforderpro,
+        benchcomposition: benchcomposition,
+        referredacts: referredacts,
+     
+      });
+      await createdDocument.save();
+      res.status(201).json({ message: "Document Uploaded successfully" });
+    } catch (error) {
+      console.log("Error:" + error.message);
+      res.status(500).json({ message: "Internal Server error" });
+    }
+  };
 
+  export const getDocs = async (req, res) => {
+    try {
+      const { adminid } = req.body;
+      // const admin = await Admin.findOne({ email });
+      const docs = await Document.find({ adminid });
+      // const isMatch = await bcryptjs.compare(password, admin.password);
+      if (!docs) {
+        return res
+          .status(400)
+          .json({ message: "No documents uploaded by the Admin." });
+      } else {
+        res.status(200).json({
+          message: "Retrieved documents successfully",
+          numofDocuments: docs.length,
+          docs: docs,
+        });
+      }
+    } catch (error) {
+      console.log("Error: " + error.message);
+      res.status(500).json({ message: "Internal Server error" });
+    }
+  };
+
+  

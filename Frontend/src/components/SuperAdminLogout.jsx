@@ -12,13 +12,13 @@ function SuperAdminLogout() {
         user: null,
       });
       localStorage.removeItem("SuperAdmin");
-      alert("Super Admin logged out successfully");
+      toast.success("Logged out successfully");
 
       setTimeout(() => {
         window.location.reload();
       }, 1000);
       window.history.replaceState(null, "", "/Home2");
-      navigate("/", { replace: true });
+      // navigate("/", { replace: true });
     } catch (error) {
       toast.error("Error: " + error.message);
     }
@@ -27,7 +27,7 @@ function SuperAdminLogout() {
   return (
     <div>
       <button
-        className="bg-black border border-black-700 text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2 rounded-md hover:bg-black-600 duration-300 cursor-pointer"
+        className="bg-black border border-black-700 text-white text-xs sm:text-sm px-2 py-1 sm:px-2 sm:py-[5px] rounded-md hover:bg-black-600 duration-300 cursor-pointer"
         onClick={handleLogout}
       >
         Logout

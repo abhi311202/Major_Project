@@ -169,22 +169,6 @@ export const Delete_Pending_Req_By_ID1 = async (Pending_Request_id) => {
 
 // **********************
 
-export const get_th1 = async () => {
-  const query = `SELECT * FROM threshold_setting_1 WHERE is_delete = FALSE AND is_active = TRUE ORDER BY created_at ASC;`;
-  const result = await client.query(query);
-  console.log(result);
-
-  if (result.rowCount === 0) {
-    console.log(result);
-    throw new Error("No Active Threshold entry found!!!");
-  } else if (result.rowCount > 1) {
-    console.log(result);
-    throw new Error("Ambiguous Thresholds found!!!");
-  } else {
-    return result.rows[0];
-  }
-};
-
 export const set_th1 = async (threshold_value, super_admin_id) => {
   try {
     const query = `INSERT INTO threshold_setting_1 (
@@ -210,6 +194,51 @@ export const set_th1 = async (threshold_value, super_admin_id) => {
   }
 };
 
+export const get_th1 = async () => {
+  const query = `SELECT * FROM threshold_setting_1 WHERE is_delete = FALSE AND is_active = TRUE ORDER BY created_at ASC;`;
+  const result = await client.query(query);
+  console.log(result);
+
+  if (result.rowCount === 0) {
+    console.log(result);
+    throw new Error("No Active Threshold entry found!!!");
+  } else if (result.rowCount > 1) {
+    console.log(result);
+    throw new Error("Ambiguous Thresholds found!!!");
+  } else {
+    return result.rows[0];
+  }
+};
+
+<<<<<<< HEAD
+export const set_th1 = async (threshold_value, super_admin_id) => {
+  try {
+    const query = `INSERT INTO threshold_setting_1 (
+      super_admin_id,
+      threshold_value,
+      is_active,
+      is_delete,
+      created_at,
+      modified_at,
+      deleted_at
+    ) VALUES ($1, $2, TRUE, FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL) RETURNING id`;
+    const result = await client.query(query, [super_admin_id, threshold_value]);
+
+    if (result.rowCount > 0) {
+      return result.rows[0].id; // Return the inserted row's ID
+    } else {
+      console.log(result);
+      // throw new Error("Error in making new entry...");
+      return false;
+    }
+  } catch (error) {
+    throw new Error("Error in making new entry");
+  }
+};
+=======
+
+>>>>>>> 2aba28a227849b55085c9d632265d58eb505a7e5
+
 export const del_th1 = async (threshold_id) => {
   try {
     const query = `UPDATE threshold_setting_1
@@ -228,7 +257,13 @@ WHERE id = $1;`;
       return false; // No row found with the given id
     }
   } catch (error) {
+<<<<<<< HEAD
     throw new Error("Error in deleting the past entry");
   }
 };
 
+=======
+    throw new Error("Error in deleting the past entry");
+  }
+};
+>>>>>>> 2aba28a227849b55085c9d632265d58eb505a7e5

@@ -9,6 +9,10 @@ import {
   get_th1,
   set_th1,
   del_th1,
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2aba28a227849b55085c9d632265d58eb505a7e5
 } from "../Models/SuperAdminModel.js";
 
 export const adminRequest = async (req, res) => {
@@ -164,7 +168,10 @@ export const Set_Threshold1 = async (req, res) => {
     }
   } catch (error) {
     // rollback logic....
+<<<<<<< HEAD
     
+=======
+>>>>>>> 2aba28a227849b55085c9d632265d58eb505a7e5
     console.log("Error in Setting Threshold: ", error);
     return res.status(500).json({
       success: false,
@@ -194,7 +201,17 @@ export const Fetch_Threshold1 = async (req, res) => {
     return res.status(500).json({
       message: "Threshol Fetching failed...",
       error: error.message || error,
-    });
-  }
+    });
+  }
 };
 
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+
+>>>>>>> 2aba28a227849b55085c9d632265d58eb505a7e5

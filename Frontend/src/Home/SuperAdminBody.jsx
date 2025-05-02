@@ -19,7 +19,13 @@ export const SuperAdminBody = () => {
 
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
+    <div
+      className="flex h-screen bg-white overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(135deg, rgb(220, 155, 122), rgb(207, 225, 238), rgb(202, 169, 226))",
+      }}
+>
       <Sidebar selected={selected} setSelected={setSelected} />
       
       {/* Right Side Content */}

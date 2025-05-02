@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MyProfileSection from "./MyProfileSection";
 import UploadNewDocument from "../Admin/UploadNewDocument";
+import UploadedDocument from "../Admin/UploadedDocument";
 import {
   FiBarChart,
   FiChevronDown,
@@ -19,7 +20,10 @@ export const AdminBody = () => {
   const [selected, setSelected] = useState("Dashboard");
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
+    <div
+      className="flex h-screen bg-white overflow-hidden"
+      
+      >
       <Sidebar selected={selected} setSelected={setSelected} />
       
       {/* Right Side Content */}
@@ -28,6 +32,8 @@ export const AdminBody = () => {
           <MyProfileSection />
         ): selected === "UploadNewDocument" ? (
           <UploadNewDocument />
+        ): selected === "UploadedDocument" ? (
+          <UploadedDocument />
         ) : (
           <ExampleContent selected={selected} />
         )}
@@ -48,7 +54,7 @@ const Sidebar = ({ selected, setSelected }) => {
   return (
     <motion.nav
       layout
-      className="sticky top-0 h-screen shrink-0 border-r border-slate-300 bg-white p-2"
+      className="sticky top-0 h-screen shrink-0 border-r border-slate-300 bg-white p-2 "
       style={{
         width: open ? "300px" : "fit-content",
       }}
@@ -66,6 +72,15 @@ const Sidebar = ({ selected, setSelected }) => {
         <Option
           Icon={FiUpload }
           title="UploadNewDocument"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          notifs={3}
+        />
+
+        <Option
+          Icon={FiUpload }
+          title="UploadedDocument"
           selected={selected}
           setSelected={setSelected}
           open={open}

@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth1 } from "../context/AuthProvider1";
 import toast from "react-hot-toast";
 import { replace, useLocation, useNavigate } from "react-router-dom";
-
+import { Toaster } from "react-hot-toast";
 function Logout() {
   const [authUser, setAuthUser] = useAuth1();
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ function Logout() {
         user: null,
       });
       localStorage.removeItem("Admin");
-      alert("Logged out successfully");
+      toast.success("Logged out successfully");
     //   toast.success("Logged out successfully");
 
       setTimeout(() => {
@@ -30,7 +30,7 @@ function Logout() {
   return (
     <div>
       <button
-        className="bg-black border border-border-700 text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2 rounded-md hover:bg-black duration-300 cursor-pointer"
+        className="bg-black border border-border-700 text-white text-xs sm:text-sm px-2 py-1 sm:px-2 sm:py-[5px] rounded-md hover:bg-black duration-300 cursor-pointer"
         onClick={handleLogout}
       >
         Logout

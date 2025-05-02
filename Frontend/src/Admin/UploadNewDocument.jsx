@@ -5,6 +5,9 @@ import axios from "axios";
 import pdfToText from "react-pdftotext"; // Import react-pdftotext
 import mammoth from "mammoth";
 import { FiUpload, FiLoader } from "react-icons/fi";
+import { toast } from "react-hot-toast";
+
+
 
 // import toast from "react-hot-toast";
 // import "../App.css";
@@ -18,6 +21,8 @@ GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 function UploadNewDocument() {
+  const [selectedFileName, setSelectedFileName] = useState('');
+
   const editor = useRef(null);
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
@@ -25,17 +30,40 @@ function UploadNewDocument() {
   const [summary, setSummary] = useState("");
   const [Class, SetClass] = useState("");
   const [Other, setOther] = useState(null);
-
-  const [loading, setLoading] = useState(false); // Add loading state
   const [loading1, setLoading1] = useState(false); // Add loading state
+  const [loading2, setLoading2] = useState(false); // Add loading state
   const [summarizationError, setSummarizationError] = useState(null);
   const [classificationError, setClassificationError] = useState(null);
+  const [entitymetaError, setEntitymetaError] = useState(null);
 
   const [classification, setClassification] = useState("");
+  const [entitymeta, setEntitymeta] = useState("");
+  const [caseno, setCaseno] = useState("");
+  const [casetype, setCasetype] = useState("");
+  const [filingdate, setFilingdate] = useState("");
+  const [casestatus, setCasestatus] = useState("");
+  const [judgmentdate, setJudgmentdate] = useState("");
+  const [courtname, setCourtname] = useState("");
+  const [bench, setBench] = useState("");
+  const [petitioner, setPetitioner] = useState("");
+  const [respondent, setRespondent] = useState("");
+  const [advofpetitioner, setAdvofpetitioner] = useState("");
+  const [advofrespondent, setAdvofrespondent] = useState("");
+  const [prevcasecitation, setPrevcasecitation] = useState("");
+  const [penaltydetail, setPenaltydetail] = useState("");
+  const [headnote, setHeadnote] = useState("");
+  const [courtno, setCourtno] = useState("");
+  const [judgementauthor, setJudgementauthor] = useState("");
+  const [judgementtype, setJudgementtype] = useState("");
+  const [langofjudgement, setLangofjudgement] = useState("");
+  const [dateofhearing, setDateofhearing] = useState("");
+  const [dateoforderpro, setDateoforderpro] = useState("");
+  const [benchcomposition, setBenchcomposition] = useState("");
+  const [referredacts, setReferredacts] = useState("");
   const [classificationReason, setClassificationReason] = useState("");
   const [classError, setClassError] = useState("");
-  const [PdfUrl, setPdfUrl] = useState("");
-  const [fileKey, setFileKey] = useState("");
+  // const [PdfUrl, setPdfUrl] = useState("");
+  // const [fileKey, setFileKey] = useState("");
 
   const storedObjectString = localStorage.getItem("Admin");
   const myObject = JSON.parse(storedObjectString);
@@ -191,6 +219,8 @@ function UploadNewDocument() {
     };
   };
 
+
+
   // Stimulate classification process
   const handleClassify = async () => {
     console.log("Quick Classify");
@@ -274,6 +304,82 @@ function UploadNewDocument() {
     }
   };
 
+  const handleEntitymeta = async () => {
+    console.log("Meta and Entity extraction");
+    setLoading2(true);
+    setEntitymetaError(null); // Reset error state before starting
+    setEntitymeta(""); // Clear previous summary
+
+    let pages = [];
+    if (!file) {
+      setEntitymetaError("No file selected.");
+      setLoading2(false);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+
+    reader.onload = async function () {
+      try {
+        const pdfData = new Uint8Array(reader.result);
+        const pdf = await getDocument({
+          data: pdfData,
+          standardFontDataUrl: "node_modules/pdfjs-dist/standard_fonts/",
+        }).promise;
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const text = textContent.items.map((item) => item.str).join(" ");
+
+          pages.push({
+            page_number: i,
+            page_char_count: text.length,
+            page_token_count: text.length / 4,
+            page_word_count: text.split(" ").length,
+            page_sentence_count_raw: text.split(".").length,
+            text: cleanString(text),
+          });
+        }
+
+        const jsonData = {
+          doc_id: 12345,
+          doc_name: file.name,
+          metadata: {},
+          pages: pages,
+        };
+
+        await axios
+          .post("http://52.66.174.249:7000/apirequired", jsonData)
+          .then((res) => {
+            console.log(JSON.stringify(res.data));
+            reset({ entitymeta: res.data.entitymetapipeline });
+            setSummary(markdownToPlainText(res.data.entitymetapipeline));
+          })
+          .catch((err) => {
+            console.error(err);
+            setEntitymetaError("Failed to fetch summary."); // Show error message in UI
+          })
+          .finally(() => {
+            setLoading(false); // Stop loading after request completes
+          });
+      } catch (error) {
+        console.error("Error processing file:", error);
+        setEntitymetaError(
+          "An error occurred while processing the document."
+        );
+        setLoading2(false);
+      }
+    };
+
+    reader.onerror = () => {
+      console.error("Error reading the file.");
+      setEntitymetaError("Failed to read the file.");
+      setLoading2(false);
+    };
+  };
+
   let fileK, url;
   const Helper = async (title) => {
     try {
@@ -323,11 +429,11 @@ function UploadNewDocument() {
     console.log("IN ON SUBMIT");
     // console.log(data,"abhi");
 
-    const success = await Helper(data.title);
-    if (!success) {
-      alert("Error: Pdf upload in S3 failed!!");
-      return;
-    }
+    // const success = await Helper(data.title);
+    // if (!success) {
+    //   alert("Error: Pdf upload in S3 failed!!");
+    //   return;
+    // }
 
     // console.log(PdfUrl,"jumon");
 
@@ -350,7 +456,7 @@ function UploadNewDocument() {
         setClassError("");
       }, 10000);
 
-      return alert("Invalid case type!");
+      return toast.error("Invalid case type!");
     }
 
     const documentInfo = {
@@ -366,8 +472,30 @@ function UploadNewDocument() {
         month: "long",
         day: "numeric",
       }),
-      pdfUrl: PdfUrl ? PdfUrl : url,
-      filekey: fileKey ? fileKey : fileK,
+      caseno: data.caseno,
+      casetype: data.casetype,
+      casestatus: data.casestatus,
+      filingdate: data.filingdate,
+      judgmentdate: data.judgmentdate,
+      courtname: data.courtname,
+      courtno: data.courtno,
+      bench: data.bench,
+      petitioner: data.petitioner,
+      respondent: data.respondent,
+      advofpetitioner: data.advofpetitioner,
+      advofrespondent: data.advofrespondent,
+      prevcasecitation: data.prevcasecitation,
+      penaltydetail: data.penaltydetail,
+      headnote: data.headnote,
+      judgementauthor: data.judgementauthor,
+      judgementtype: data.judgementtype,
+      langofjudgement: data.langofjudgement,
+      dateofhearing: data.dateofhearing,
+      dateoforderpro: data.dateoforderpro,
+      benchcomposition: data.benchcomposition,
+      referredacts: data.referredacts,
+      // pdfUrl: PdfUrl ? PdfUrl : url,
+      // filekey: fileKey ? fileKey : fileK,
     };
 
     // const documentInfo = {
@@ -387,13 +515,13 @@ function UploadNewDocument() {
 
     console.log(documentInfo, "abhi1");
     await axios
-      .post("http://localhost:4001/admin/adminDocuments", documentInfo)
+      .post("http://localhost:4001/Admin/adminDocuments", documentInfo)
       .then((res) => {
         // console.log(res.data);
         if (res.data) {
           // console.log(res.data);
           // Remove "Please wait..." toast
-          alert(res.data.message);
+          toast.success(res.data.message);
           handleResetButton();
           handleResetButton();
           // **Force re-render of file input field**
@@ -404,7 +532,7 @@ function UploadNewDocument() {
         if (err.response) {
           console.log(err);
           console.log("Error from backend: " + err.response.data.message);
-          alert("Error: " + err.response.data.message);
+          toast.error("Error: " + err.response.data.message);
         }
       });
   };
@@ -460,18 +588,39 @@ function UploadNewDocument() {
     }
   };
 
-  // const handleShowResult = () => {
-  //   if (file) {
-  //     // setTimeout(() => {
-  //     const mockSummary =
-  //       "This is the automatically generated summary for your uploaded document.";
-  //     setSummary(mockSummary);
+  const handleShowResult = () => {
+    if (file) {
+      // setTimeout(() => {
+      const mockSummary =
+        "This is the automatically generated summary for your uploaded document.";
+      setSummary(mockSummary);
 
-  //     const mockClass = "Criminal";
-  //     SetClass(mockClass);
-  //     // }, 1000);
-  //   }
-  // };
+      const mockClass = "Criminal";
+      SetClass(mockClass);
+      // }, 1000);
+    }
+  };
+  const handleClear = () => {
+    setCaseno("");
+    setCasetype("");
+    setCasestatus("");
+    setFilingdate("");
+    setJudgmentdate("");
+    setCourtno("");
+    setCourtname("");
+    setBench("");
+    setPetitioner("");
+    setRespondent("");
+    setAdvofpetitioner("");
+    setAdvofrespondent("");
+    setPrevcasecitation("");
+    setPenaltydetail("");
+    setHeadnote("");
+  
+    // Optional: if you're using useForm() from react-hook-form
+    // reset();
+  };
+  
 
   const handleFileClick = () => {
     if (file) {
@@ -480,92 +629,158 @@ function UploadNewDocument() {
       window.open(fileURL, "_blank");
     }
   };
+  const [isInScope, setIsInScope] = useState(null);
+
+  const [documentContent, setDocumentContent] = useState(null);
+  const [responseValue, setResponseValue] = useState(null);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [expectedValue, setExpectedValue] = useState(null);
+  const [matchMessage, setMatchMessage] = useState("");
+
+  useEffect(() => {
+    const fetchExpectedValue = async () => {
+      try {
+        const response = await axios.get("http://localhost:4001/SuperAdmin/get-threshhold1");
+        const expectedValue = response.data.data.threshold_value;
+        localStorage.setItem("Threshold_Id", response.data.data.threshold_id);
+        console.log("Fetched Expected Value:", expectedValue);
+        setExpectedValue(expectedValue);
+      } catch (error) {
+        console.error("Error fetching expected value:", error);
+      }
+    };
+  
+    fetchExpectedValue();
+  }, []);
+  
+
+  
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setLoading(true);
+      setSelectedFileName(file.name);
+
+  
+      const reader = new FileReader();
+      reader.onload = () => {
+        const content = reader.result;
+        setDocumentContent(content);
+  
+        const simulatedResponseValue = 75;
+        setResponseValue(simulatedResponseValue);
+        setLoading(false);
+  
+        // Check match
+        if (expectedValue !== null) {
+          if (simulatedResponseValue >= expectedValue) {
+            setIsInScope(true);  // ✅ Document is in scope
+          } else {
+            setIsInScope(false); // ❌ Document is out of scope
+          }
+        }
+      };
+  
+      reader.readAsText(file);
+    }
+    else {
+      setSelectedFileName('');
+    }
+  };
+  
+  
 
   return (
-    <div className="flex min-h-screen max-h-max dark:bg-[#222] overflow-hidden">
-      <div className="flex-1 p-6 py-4">
-        <h2 className="text-3xl font-semibold text-gray-800 dark:text-white mb-6">
+<div className="flex min-h-screen max-h-max overflow-hidden ">
+  <div className="flex flex-col items-center justify-start w-full p-4">
+    
+    {/* File Chooser Always on Top */}
+    <div className="w-full ml-[950px]">
+  <label
+    htmlFor="file-upload"
+    className={`inline-block cursor-pointer text-white text-base font-semibold py-3 px-6 rounded-md transition-all duration-300
+      ${isInScope ? 'bg-gray-400 cursor-not-allowed' : 'bg-black hover:bg-gray-700'}`}
+  >
+    Browse File
+  </label>
+  <input
+    id="file-upload"
+    type="file"
+    accept=".txt,.pdf,.docx"
+    onChange={handleFileChange}
+    disabled={isInScope}
+    className="hidden"
+  />
+  {selectedFileName && (
+    <p className="mt-2 text-sm text-gray-700">{selectedFileName}</p>
+  )}
+</div>
+
+
+
+    <br></br>
+
+
+    {/* Loading or Error Messages */}
+    {loading && <p className="text-black mb-4">Loading...</p>}
+    {error && (
+      <div className="bg-red-500 text-white p-4 mb-4 w-full max-w-3xl rounded-md">
+        Error fetching expected value
+      </div>
+    )}
+
+    {/* In Scope Form */}
+    {isInScope === true && (
+      <div className="w-full px-0 mx-[-125px]">
+        <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
           Upload New Document
         </h2>
-        <form
-          // onSubmit={handleSubmit(onSubmit)}
-          method="dialog"
-          className="space-y-4 text-black"
-        >
-          <label className="block text-gray-600 font-medium dark:text-white">
-            Document Title:
+
+        <form method="dialog" className="space-y-6 text-black">
+
+          {/* Title */}
+          <div>
+            <label className="block text-gray-600 dark:text-white font-medium mb-1">
+              Document Title:
+            </label>
             <input
               type="text"
-              className="w-full p-2 rounded-xl shadow border border-gray-200 focus:outline-none focus:border-black dark:bg-black dark:border-gray-600"
+              className="w-full p-2 rounded-md border border-gray-300 dark:bg-black dark:border-gray-600"
               placeholder="Enter document title"
               {...register("title", { required: true })}
             />
-          </label>
-          {errors.title && (
-            <span className="p-2 text-sm text-red-500">
-              This field is required
-            </span>
-          )}
+            {errors.title && (
+              <span className="text-sm text-red-500">This field is required</span>
+            )}
+          </div>
 
-          <label className="block text-gray-600 font-medium dark:text-white">
-            Serial No:
+          {/* Serial No */}
+          <div>
+            <label className="block text-gray-600 dark:text-white font-medium mb-1">
+              Serial No:
+            </label>
             <input
               type="text"
-              className="w-full p-2 rounded-xl shadow border border-gray-200 focus:outline-none focus:border-black dark:bg-black dark:border-gray-600 dark:text-white"
+              className="w-full p-2 rounded-md border border-gray-300 dark:bg-black dark:border-gray-600"
               placeholder="Enter serial number"
               {...register("serialnum", { required: true })}
             />
-          </label>
-          {errors.serialnum && (
-            <span className="p-2 text-sm text-red-500">
-              This field is required
-            </span>
-          )}
-
-          <div className="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4 sm:gap-6">
-            {/* Upload Button */}
-            <label
-              className={`w-full sm:w-auto text-center bg-black text-white font-medium px-6 py-2 rounded-md transition duration-300 cursor-pointer ${
-                loading || loading1
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-gray-700"
-              }`}
-            >
-              <span className="whitespace-nowrap">
-                {loading || loading1 ? "Processing..." : "Upload Document"}
-              </span>
-              <input
-                type="file"
-                id="fileUploaded"
-                onChange={handleFileUpload}
-                className="hidden"
-                accept=".pdf,.docx"
-                disabled={loading || loading1}
-              />
-            </label>
-
-            {/* File Display - Now Fully Inline with View Document */}
-            {file && (
-              <div className="w-full sm:w-auto flex items-center gap-2">
-                <p className="text-gray-600 text-xs sm:text-sm border border-gray-300 p-1 sm:p-2 rounded-md dark:text-white truncate max-w-[150px] sm:max-w-[200px] inline-flex items-center gap-1">
-                  <strong>Uploaded File:</strong> {file.name}
-                </p>
-                <button
-                  type="button"
-                  onClick={handleFileClick}
-                  className="text-blue-600 underline text-xs sm:text-sm whitespace-nowrap"
-                >
-                  View Document
-                </button>
-              </div>
+            {errors.serialnum && (
+              <span className="text-sm text-red-500">This field is required</span>
             )}
+          </div>
 
-            {/* Show Result Button */}
+          {/* Upload + View + Show Result */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            
+
+            
+
             <button
-              className={`w-full sm:w-auto bg-black text-white font-medium px-6 py-2 rounded-md transition duration-300 ${
-                file
-                  ? "hover:bg-gray-700 cursor-pointer"
-                  : "opacity-50 cursor-not-allowed"
+              className={`w-full sm:w-auto bg-black text-white font-medium px-6 py-2 rounded-md ${
+                file ? "hover:bg-gray-700" : "opacity-50 cursor-not-allowed"
               }`}
               onClick={() => {
                 handleSummarize();
@@ -573,139 +788,414 @@ function UploadNewDocument() {
               }}
               disabled={!file}
             >
-              <span className="whitespace-nowrap">Show Result</span>
+              Show Result
             </button>
           </div>
 
-          <label className="block text-gray-600 font-medium dark:text-white">
-            Document Content:
-            <textarea
-              // className="dark:bg-black dark:border-gray-600"
-
-              rows="16"
-              deavalue={content}
-              onChange={(newContent) => {
-                setContent(newContent);
-                setValue("content", newContent);
-              }}
-              className="w-full p-4 rounded-xl shadow border border-gray-200 resize-none text-gray-700 dark:bg-black dark:border-gray-600 dark:text-white"
-              {...register("content", { required: true })}
-            />
-          </label>
-          {errors.content && (
-            <span className="p-2 text-sm text-red-500">
-              This field is required
-            </span>
-          )}
-
-<div className="mb-6">
-  <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">
-    Key Entities
-  </h2>
-
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-black border border-gray-300 dark:border-gray-600 rounded-xl p-6 shadow">
-
-    {/* Field Generator */}
-    {[
-      "Case No",
-      "Case Type",
-      "Case Status",
-      "Filing Date",
-      "Judgement Date",
-      "Court No",
-      "Court Name",
-      "Bench",
-      "Petitioner",
-      "Respondent",
-      "Advantage of Petitioner",
-      "Advantage of Respondent",
-      "Previous case citation",
-      "Penalty Detail",
-      "Head Note"
-    ].map((label, index) => (
-      <div key={index} className="flex flex-col">
-        <label className="text-gray-600 dark:text-white font-medium mb-1">
-          {label}:
-        </label>
-        <input
-          type="text"
-          className="p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-black text-gray-800 dark:text-white shadow-sm"
-          placeholder={`Enter ${label.toLowerCase()}`}
-          // You can add value, onChange, or register here
-        />
-      </div>
-    ))}
-
+<div className="border rounded-lg p-6 shadow-md bg-white dark:bg-gray-900">
+          <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Key Entities</h2>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  {/* Case No */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Case No:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setCaseno(e.target.value);
+        setValue("caseno", e.target.value);
+      }}
+    />
   </div>
+
+  {/* Case Type */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Case Type:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setCasetype(e.target.value);
+        setValue("casetype", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Case Status */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Case Status:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setCasestatus(e.target.value);
+        setValue("casestatus", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Filing Date */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Filing Date:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setFilingdate(e.target.value);
+        setValue("filingdate", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Judgment Date */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Judgment Date:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setJudgmentdate(e.target.value);
+        setValue("judgmentdate", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Court No */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Court No:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setCourtno(e.target.value);
+        setValue("courtno", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Court Name */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Court Name:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setCourtname(e.target.value);
+        setValue("courtname", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Bench */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Bench:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setBench(e.target.value);
+        setValue("bench", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Petitioner */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Petitioner:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setPetitioner(e.target.value);
+        setValue("petitioner", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Respondent */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Respondent:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setRespondent(e.target.value);
+        setValue("respondent", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Adv. of Petitioner */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Adv. of Petitioner:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setAdvofpetitioner(e.target.value);
+        setValue("advofpetitioner", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Adv. of Respondent */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Adv. of Respondent:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setAdvofrespondent(e.target.value);
+        setValue("advofrespondent", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Previous case citation */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Previous Case Citation:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setPrevcasecitation(e.target.value);
+        setValue("prevcasecitation", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Penalty Detail */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Penalty Detail:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setPenaltydetail(e.target.value);
+        setValue("penaltydetail", e.target.value);
+      }}
+    />
+  </div>
+
+  {/* Head Note */}
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Head Note:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setHeadnote(e.target.value);
+        setValue("headnote", e.target.value);
+      }}
+    />
+  </div>
+</div>
+<div className="mt-6 flex flex-wrap gap-4">
+  <button
+    onClick={handleShowResult}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+  >
+    Show Result
+  </button>
+
+  <button
+    onClick={handleClear}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+  >
+    Clear
+  </button>
+</div>
+
 </div>
 
 
-          <label className="block text-gray-600 font-medium dark:text-white">
-            Summary:
+
+
+
+
+
+
+{/* Meta Data */}
+
+<div className="border rounded-lg p-6 shadow-md bg-white dark:bg-gray-900">
+          <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Meta Data</h2>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Judgement Author:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setJudgementauthor(e.target.value);
+        setValue("judgementauthor", e.target.value);
+      }}
+    />
+  </div>
+
+
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Judgement Type:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setJudgementtype(e.target.value);
+        setValue("judgementtype", e.target.value);
+      }}
+    />
+  </div>
+
+  
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Language of Judgement:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setLangofjudgement(e.target.value);
+        setValue("langofjudgement", e.target.value);
+      }}
+    />
+  </div>
+
+ 
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+     Date of Hearing:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setDateofhearing(e.target.value);
+        setValue("dateofhearing", e.target.value);
+      }}
+    />
+  </div>
+
+  
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Date of Order Pronouncement:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setDateoforderpro(e.target.value);
+        setValue("dateoforderpro", e.target.value);
+      }}
+    />
+  </div>
+
+ 
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Bench Composition:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setBenchcomposition(e.target.value);
+        setValue("benchcomposition", e.target.value);
+      }}
+    />
+  </div>
+
+
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-1">
+      Referred acts:
+    </label>
+    <textarea
+      rows="2"
+      className="w-full border rounded-md resize-none border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+      onChange={(e) => {
+        setReferredacts(e.target.value);
+        setValue("referredacts", e.target.value);
+      }}
+    />
+  </div>
+
+ 
+</div>
+<div className="mt-6 flex flex-wrap gap-4">
+  <button
+    onClick={handleShowResult}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+  >
+    Show Result
+  </button>
+
+  <button
+    onClick={handleClear}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+  >
+    Clear
+  </button>
+</div>
+</div>
+{/* class */}
+<div className="border rounded-lg p-6 shadow-md bg-white dark:bg-gray-900">
+<label className="block text-gray-600 font-medium dark:text-white">
+            Classification:
             <div className="relative w-full">
+              {/* Textarea Input */}
               <textarea
-                rows="14"
-                defaultValue={summary} // Instead of value
+                rows="3"
+                defaultValue={classification}
                 onChange={(e) => {
-                  setSummary(e.target.value);
-                  setValue("summary", e.target.value);
-                }}
-                {...(loading ? {} : register("summary", { required: true }))}
-                className={`w-full p-4 rounded-xl shadow border border-gray-200 resize-none text-gray-700 dark:bg-black dark:border-gray-600 dark:text-white ${
-                  summarizationError ? "border-red-500" : ""
-                }`}
-              />
-
-              {/* Loading Overlay */}
-              {loading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-black/80">
-                  <span className="text-3xl font-bold text-gray-600 dark:text-gray-300 animate-pulse">
-                    Processing...
-                  </span>
-                </div>
-              )}
-
-              {/* Error Overlay */}
-              {!loading && summarizationError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-red-100/90 dark:bg-red-900/80 border border-red-500 rounded-lg">
-                  <span className="text-lg font-semibold text-red-700 dark:text-red-300">
-                    {summarizationError}
-                  </span>
-                </div>
-              )}
-            </div>
-          </label>
-
-          {errors.summary && (
-            <span className="p-2 text-sm text-red-500">
-              This field is required
-            </span>
-          )}
-
-         
-
-          <label className="block text-gray-600 font-medium dark:text-white">
-            Classification Reason:
-            <div className="relative w-full">
-              <textarea
-                rows="8"
-                // value={loading1 ? "" : classificationReason || ""}
-                defaultValue={classificationReason}
-                onChange={(e) => {
-                  setClassificationReason(e.target.value);
-                  setValue("ClassificationReason", e.target.value);
+                  setClassification(e.target.value);
+                  setValue("Class", e.target.value);
                 }}
                 {...(loading1
                   ? {}
-                  : register("classificationReason", { required: true }))}
-                className={`w-full p-4 rounded-xl shadow border border-gray-200 rounded-lg resize-none text-gray-700 dark:bg-black dark:border-gray-600 dark:text-white ${
-                  classificationError ? "border-red-500" : ""
+                  : register("classification", { required: true }))}
+                className={`w-full p-4 border rounded-lg resize-none text-gray-700 dark:bg-black dark:border-gray-600 dark:text-white ${
+                  classError || classificationError
+                    ? "border-red-500"
+                    : "border-gray-300"
                 }`}
-
-                // {...(loading1
-                //   ? {}
-                //   : register("ClassificationReason", { required: true }))}
               />
+
               {loading1 && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-black/80">
                   <span className="text-3xl font-bold text-gray-600 dark:text-gray-300 animate-pulse">
@@ -713,39 +1203,168 @@ function UploadNewDocument() {
                   </span>
                 </div>
               )}
-              {/* Error Overlay */}
-              {!loading1 && classificationError && (
+
+              {/* Display classificationError inside the textarea */}
+              {classificationError && !loading1 && (
                 <div className="absolute inset-0 flex items-center justify-center bg-red-100/90 dark:bg-red-900/80 border border-red-500 rounded-lg">
                   <span className="text-lg font-semibold text-red-700 dark:text-red-300">
                     {classificationError}
                   </span>
                 </div>
               )}
+
+              {/* Display classError below the textarea */}
+              {!loading1 && classError && (
+                <span className="text-red-500 text-sm font-medium mt-1 block">
+                  {classError}
+                </span>
+              )}
             </div>
           </label>
 
-          {errors.ClassificationReason && (
-            <span className="p-2 text-sm text-red-500">
-              This field is required
-            </span>
-          )}
+           {/* Classification Reason */}
+           <div>
+            <label className="block text-gray-600 dark:text-white font-medium mb-1">
+              Classification Reason:
+            </label>
+            <div className="relative">
+              <textarea
+                rows="8"
+                defaultValue={classificationReason}
+                onChange={(e) => {
+                  setClassificationReason(e.target.value);
+                  setValue("ClassificationReason", e.target.value);
+                }}
+                {...(loading1 ? {} : register("classificationReason", { required: true }))}
+                className={`w-full p-3 border rounded-md resize-none dark:bg-black dark:border-gray-600 dark:text-white ${
+                  classificationError ? "border-red-500" : ""
+                }`}
+              />
+              {loading1 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-black/80">
+                  <span className="text-2xl font-bold text-gray-600 dark:text-gray-300 animate-pulse">
+                    Processing...
+                  </span>
+                </div>
+              )}
+              {!loading1 && classificationError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-red-100 dark:bg-red-900 border border-red-500 rounded-lg">
+                  <span className="text-red-700 dark:text-red-300 font-semibold">
+                    {classificationError}
+                  </span>
+                </div>
+              )}
+            </div>
+            {errors.ClassificationReason && (
+              <span className="text-sm text-red-500">This field is required</span>
+            )}
+          </div>
 
-          <div className="flex justify-center justify-around">
+          <div className="mt-6 flex flex-wrap gap-4">
+  <button
+    onClick={handleShowResult}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+  >
+    Show Result
+  </button>
+
+  <button
+    onClick={handleClear}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+  >
+    Clear
+  </button>
+</div>
+</div>
+
+          {/* Summary */}
+          <div className="border rounded-lg p-6 shadow-md bg-white dark:bg-gray-900">
+          <div>
+            <label className="block text-gray-600 dark:text-white font-medium mb-1">
+              Summary:
+            </label>
+            <div className="relative">
+              <textarea
+                rows="10"
+                defaultValue={summary}
+                onChange={(e) => {
+                  setSummary(e.target.value);
+                  setValue("summary", e.target.value);
+                }}
+                {...(loading ? {} : register("summary", { required: true }))}
+                className={`w-full p-3 border rounded-md resize-none dark:bg-black dark:border-gray-600 dark:text-white ${
+                  summarizationError ? "border-red-500" : ""
+                }`}
+              />
+              {loading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-black/80">
+                  <span className="text-2xl font-bold text-gray-600 dark:text-gray-300 animate-pulse">
+                    Processing...
+                  </span>
+                </div>
+              )}
+              {!loading && summarizationError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-red-100 dark:bg-red-900 border border-red-500 rounded-lg">
+                  <span className="text-red-700 dark:text-red-300 font-semibold">
+                    {summarizationError}
+                  </span>
+                </div>
+              )}
+            </div>
+            {errors.summary && (
+              <span className="text-sm text-red-500">This field is required</span>
+            )}
+          </div>
+          <div className="mt-6 flex flex-wrap gap-4">
+  <button
+    onClick={handleShowResult}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-blue-500 dark:hover:bg-blue-600"
+  >
+    Show Result
+  </button>
+
+  <button
+    onClick={handleClear}
+    className="bg-black hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white"
+  >
+    Clear
+  </button>
+</div>
+          </div>
+
+         
+
+                    {/* Content */}
+                    <div>
+            <label className="block text-gray-600 dark:text-white font-medium mb-1">
+              Document Content:
+            </label>
+            <textarea
+              rows="10"
+              // value={content}
+              onChange={(e) => {
+                setContent(e.target.value);
+                setValue("content", e.target.value);
+              }}
+              {...register("content", { required: true })}
+              className="w-full p-3 border rounded-md resize-none dark:bg-black dark:border-gray-600 dark:text-white"
+            />
+            {errors.content && (
+              <span className="text-sm text-red-500">This field is required</span>
+            )}
+          </div>
+
+          {/* Submit + Reset */}
+          <div className="flex justify-between">
             <button
-              className={`bg-black text-white font-medium px-6 py-2 rounded-md transition duration-300 w-1/4 ${
-                loading || loading1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              // type="submit"
+              className="w-1/4 mr-2 bg-black text-white py-2 rounded-md"
               onClick={handleSubmit(onSubmit)}
               disabled={loading || loading1}
             >
               {loading || loading1 ? "Processing..." : "Submit"}
             </button>
-
             <button
-              className={`bg-black text-white font-medium px-6 py-2 rounded-md transition duration-300 w-1/4 ${
-                loading || loading1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className="w-1/4 ml-2 bg-black text-white py-2 rounded-md"
               type="reset"
               onClick={handleResetButton}
               disabled={loading || loading1}
@@ -755,7 +1374,18 @@ function UploadNewDocument() {
           </div>
         </form>
       </div>
-    </div>
+    )}
+
+    {/* Out of Scope Warning */}
+    {isInScope === false && (
+      <div className="bg-yellow-500 text-black p-4 rounded-md w-full max-w-3xl text-center mt-4">
+        ❌ Document is out of scope
+      </div>
+    )}
+  </div>
+</div>
+
+
   );
 }
 
