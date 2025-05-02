@@ -10,7 +10,7 @@ import {
   Approve_Req,
   Delete_Req,
   Set_Threshold1,
-  Fetch_Threshold1
+  Fetch_Threshold1,
 } from "../Controllers/superAdminController.js";
 
 //   router.post("/register", registerAdmin);
